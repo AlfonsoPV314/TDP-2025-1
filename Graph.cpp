@@ -113,6 +113,8 @@ bool Graph::isDominatingSet(bool currentSet[], int size){
     return true;
 }
 
+
+// TO DO: Scrap this algorithm and apply perfect elimination ordering to find MDS and hopefully all MDS
 void Graph::findAllMDS(bool currentSet[], int currentSetSize, bool bestSet[], int& bestSize, int pos, bool includedNodes[], int minSetSize){
     if(currentSetSize > V){
         return;
