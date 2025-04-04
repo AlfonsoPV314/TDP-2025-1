@@ -6,4 +6,11 @@ class State{
     int* Isle2;
     Graph M;
     Boat* BoatArray;
+    float Priority;
+    State* Parent;
+    // string Operation;
+    bool operator==(State* s);
+    bool operator<(State* s);
+    State();
+    void printState();
 };
