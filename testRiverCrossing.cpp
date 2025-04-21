@@ -3,7 +3,16 @@
 int main() {
     RiverCrossing r(100);
     State* s = r.solve();
-    int* arr = new int[3]{1, 2, 3};
+    cout << "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" << endl;
+    if (s != nullptr) {
+        cout << "[main] Solucion encontrada!" << endl;
+        s->printPath();
+        cout << endl;
+    } else {
+        cout << "[main] No se encontro solucion." << endl;
+    }
+    cout << "en " << r.pasos << " pasos" <<endl;
+    int* arr = new int[3]{4, 2, 1};
     int combCount = 0;
     int** combs = r.combinaciones(arr, 3, 3, combCount);
 

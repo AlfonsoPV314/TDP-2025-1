@@ -30,7 +30,6 @@ class State {
         State* clone();
         void printState();
         void printPath(); // imprime recursivamente la secuencia de operaciones
-        void priorityCalc(); // calcula la prioridad del estado
         bool operator==(State s);
         bool operator<(State s);
 };

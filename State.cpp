@@ -45,7 +45,6 @@ State* State::clone() {
 
 State* State::cross(int psg){
     State *n = clone();
-    n->priorityCalc();
     // detectar orilla
     if(psg == this->psgs){
         return crossVoid();
@@ -76,7 +75,6 @@ State* State::cross(int psg){
 State* State::crossVoid() {
     State *n = clone();
     n->operation = "crossVoid";
-    n->priorityCalc(); // solo para testear con heap
     // detectar orilla
     if (isIzq) {
         if (incompMtrx->isValid(-1, Izq)){
@@ -114,18 +112,6 @@ void State::printState() {
     if (Der[REPOLLO]) cout << "Repollo ";
     cout << endl;
     cout << "=======================" << endl;
-}
-
-void State::priorityCalc() {
-    // Se calcula la prioridad como la cantidad de elementos en la orilla
-    // izquierda que no son incompatibles entre si
-    priority = 1;
-    for (int i = 0; i < 3; i++) {
-        if (Der[i]) {
-            priority++;
-        }
-    }
-    this->priority = priority;
 }
 
 bool State::operator==(State s) {
