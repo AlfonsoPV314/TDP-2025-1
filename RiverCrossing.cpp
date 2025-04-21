@@ -67,28 +67,38 @@ void RiverCrossing::priorityCalc(State* s) {
 }
 
 int** RiverCrossing::combinaciones(int* arr, int n, int size, int& combCount) {
-    int maxCombinations = (1 << size) - 1; // maximas combinaciones posibles.
+    // Determinar la cantidad máxima de combinaciones posibles
+    int maxCombinations = (1 << n) - 1; // 2^n - 1 combinaciones
+    combCount = 0;
+
+    // Crear el arreglo 2D para almacenar combinaciones
     int** output = new int*[maxCombinations];
     for (int i = 0; i < maxCombinations; i++) {
-        output[i] = new int[size]();
+        output[i] = new int[size](); // Inicializa en ceros
     }
-    combCount = 0;
-    for (int r = 1; r <= size; r++) { // generar combinaciones de tamaños 1 hasta "size".
-        int* data = new int[r];
+
+    // Generar combinaciones desde el tamaño más grande hacia el más pequeño
+    for (int r = size; r >= 1; r--) {
+        int* data = new int[r]; // Espacio temporal para una combinación
         combinacion(output, arr, data, 0, n - 1, 0, r, combCount);
-        delete[] data;
+        delete[] data; // Liberar memoria del temporal
     }
+
     return output;
 }
 
+
 void RiverCrossing::combinacion(int**& output, int* arr, int* data, int start, int end, int index, int r, int& combIndex) {
+    // Caso base: combinación completa
     if (index == r) {
         for (int i = 0; i < r; i++) {
-            output[combIndex][i] = data[i];
+            output[combIndex][i] = data[i]; // Copiar al resultado
         }
         combIndex++;
         return;
     }
+
+    // Generar combinaciones recursivamente
     for (int i = start; i <= end && end - i + 1 >= r - index; i++) {
         data[index] = arr[i];
         combinacion(output, arr, data, i + 1, end, index + 1, r, combIndex);

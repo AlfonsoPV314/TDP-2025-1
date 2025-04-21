@@ -4,31 +4,12 @@ Graph::Graph(int v){
     this->V = v;
     E = 0;
     M = new int*[V];
+    incompArr = new int[V];
     for(int i = 0; i < V; i++){
         M[i] = new int[V];
         for(int j = 0; j < V; j++){
             M[i][j] = 0;
         }
-    }
-}
-
-Graph::Graph(int v, List** l){
-    this->V = v;
-    E = 0;
-    M = new int*[V];
-    for(int i = 0; i < V; i++){
-        M[i] = new int[V];
-        for(int j = 0; j < V; j++){
-            M[i][j] = 0;
-        }
-    }
-
-    for(int i = 0; i < (*l)->Len; i++){
-        int u = (*l)[i].get(0);
-        int v = (*l)[i].get(1);
-        M[u][v] = 1;
-        M[v][u] = 1;
-        E++;
     }
 }
 
@@ -37,6 +18,7 @@ Graph::~Graph(){
         delete[] M[i];
     }
     delete[] M;
+    delete[] incompArr;
 }
 
 void Graph::addEdge(int u, int v){
@@ -48,6 +30,8 @@ void Graph::addEdge(int u, int v){
     }
     M[u][v] = 1;
     M[v][u] = 1;
+    incompArr[u]++;
+    incompArr[v]++;
     E++;
 }
 
@@ -89,12 +73,37 @@ bool Graph::isValid(int psg, bool* arr){
     return true;
 }
 
+
+
+int* Graph::sortByIncomp(int* arr, int size) {
+    // Crear un nuevo arreglo dinámico para los elementos ordenados
+    int* sortedArr = new int[size];
+    for (int i = 0; i < size; i++) {
+        sortedArr[i] = arr[i];
+    }
+    
+    // Ordenar usando Bubble Sort
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (incompArr[sortedArr[j] - 1] < incompArr[sortedArr[j + 1] - 1]) {
+                // Intercambiar elementos
+                int temp = sortedArr[j];
+                sortedArr[j] = sortedArr[j + 1];
+                sortedArr[j + 1] = temp;
+            }
+        }
+    }
+
+    return sortedArr;
+}
+
 Graph* Graph::clonePtr(){
     Graph* g = new Graph(V);
     for(int i = 0; i < V; i++){
         for(int j = 0; j < V; j++){
             g->M[i][j] = M[i][j];
         }
+        g->incompArr[i] = incompArr[i];
     }
     return g;
 }

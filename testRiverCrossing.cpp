@@ -12,24 +12,33 @@ int main() {
         cout << "[main] No se encontro solucion." << endl;
     }
     cout << "en " << r.pasos << " pasos" <<endl;
-    int* arr = new int[3]{4, 2, 1};
+    int arr[3] = {3, 2, 1};
+    int* test = s->incompMtrx->sortByIncomp(arr, 3);
+    for (int i = 0; i < 3; i++) {
+        cout << test[i] << " ";
+    }
+    std::cout << std::endl;
     int combCount = 0;
-    int** combs = r.combinaciones(arr, 3, 3, combCount);
 
+    // Generar combinaciones
+    int** combinations = r.combinaciones(test, 3, 3, combCount);
+
+    // Imprimir las combinaciones generadas
+    std::cout << "Se generaron " << combCount << " combinaciones:" << std::endl;
     for (int i = 0; i < combCount; i++) {
-        cout << "Combinacion " << i + 1 << ": ";
-        for (int j = 0; j < 3 && combs[i][j] != 0; j++) {
-            cout << combs[i][j] << " ";
+        std::cout << "Combinación " << i + 1 << ": ";
+        for (int j = 0; j < 3 && combinations[i][j] > 0; j++) {
+            std::cout << combinations[i][j] << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 
-    // Liberar memoria
+
+    // Liberar memoria de las combinaciones
     for (int i = 0; i < combCount; i++) {
-        delete[] combs[i];
+        delete[] combinations[i];
     }
-    delete[] combs;
-    delete[] arr;
+    delete[] combinations;
 
     return 0;
 }

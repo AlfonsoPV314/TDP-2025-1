@@ -8,6 +8,7 @@ State::State() {
     for (int i = 0; i < 3; i++) {
         Izq[i] = false; // todos los elementos en la orilla izquierda
         Der[i] = false; // todos los elementos en la orilla derecha
+        //incompArr[i] = 0; // inicializa el contador de incompatibilidades
     }
 }
 
@@ -15,17 +16,22 @@ void State::setInitialState() {
     isIzq=true;
     parent=nullptr;
     priority=0;
+    psgs = 3; // cantidad de pasajeros
     operation="Inicializacion";
     incompMtrx = new Graph(3);
     incompMtrx->addEdge(ZORRO, CABRA);
     incompMtrx->addEdge(CABRA, REPOLLO);
-    Izq[ZORRO] = true;
-    Izq[CABRA] = true;
-    Izq[REPOLLO] = true;
-    Der[ZORRO] = false;
-    Der[CABRA] = false;
-    Der[REPOLLO] = false;
-    psgs = 3; // cantidad de pasajeros
+    for(int i = 0; i < psgs; i++) {
+        Der[i] = false; // todos los elementos en la orilla derecha
+        Izq[i] = true; // todos los elementos en la orilla izquierda
+    }
+    // for(int i = 0; i < psgs; i++) {
+    //     for(int j = 0; j < psgs; j++) {
+    //         if (incompMtrx->M[i][j] == 1) {
+    //             incompArr[i]++;
+    //         }
+    //     }
+    // }
 }
 
 State* State::clone() {
@@ -42,6 +48,9 @@ State* State::clone() {
     }
     return n;    
 }
+
+
+
 
 State* State::cross(int psg){
     State *n = clone();
