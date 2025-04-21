@@ -1,26 +1,46 @@
-# Compilation and linking logic
+all: testList testGraph testHeap testState testStack testRiverCrossing testGraph testList
 
-all: Node.o List.o Graph.o main
+ClaseEjemplo.o: ClaseEjemplo.h ClaseEjemplo.cpp
+	g++ -c ClaseEjemplo.cpp
 
-# Compile Node.cpp to Node.o
-Node.o: Node.cpp Node.h	# Node.cpp depends on Node.h
-	g++ -c Node.cpp
+State.o: State.cpp State.h
+	g++ -c State.cpp
 
-# Compile List.cpp to List.o
-List.o: List.cpp List.h Node.h	# List.o depends on List.cpp, List.h and Node.h
-	g++ -c List.cpp
+Stack.o: Stack.cpp Stack.h 
+	g++ -c Stack.cpp
 
-Graph.o: Graph.cpp Graph.h List.h Node.h	# Graph.o depends on Graph.cpp, Graph.h, List.h and Node.h
+RiverCrossing.o: RiverCrossing.h RiverCrossing.cpp
+	g++ -c RiverCrossing.cpp
+
+Heap.o: Heap.cpp Heap.h
+	g++ -c Heap.cpp
+
+Graph.o: Node.o List.o Graph.cpp Graph.h
 	g++ -c Graph.cpp
 
-# Link main.o and Node.o to create the executable 'main'
-main: main.cpp Node.o List.o Graph.o	# main depends on main.cpp, Node.o and List.o (instructions)
-	g++ Node.o List.o Graph.o main.cpp -o main
+List.o: Node.o List.cpp List.h
+	g++ -c List.cpp
 
-# Clean up the object files and executables
+Node.o: Node.cpp Node.h
+	g++ -c Node.cpp
+
+testGraph: Node.o List.o Graph.o testGraph.cpp
+	g++ Node.o List.o Graph.o testGraph.cpp -o testGraph
+
+testList: Node.o List.o testList.cpp
+	g++ Node.o List.o testList.cpp -o testList
+
+testRiverCrossing: Node.o List.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp
+	g++ Node.o List.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp -o testRiverCrossing
+
+testStack: Node.o List.o Graph.o State.o Stack.o testStack.cpp
+	g++ Node.o List.o Graph.o State.o Stack.o testStack.cpp -o testStack
+
+testState: Node.o List.o Graph.o State.o testState.cpp
+	g++ Node.o List.o Graph.o State.o testState.cpp -o testState
+
+testHeap: Node.o List.o Graph.o State.o Heap.o testHeap.cpp
+	g++ Node.o List.o Graph.o State.o Heap.o testHeap.cpp -o testHeap
+
 clean:
-	rm -rf *.o main
-	
-# Run the program
-run: all
-	./main
+	rm -rf *.o testList testGraph testHeap testState testStack testRiverCrossing testGraph testList

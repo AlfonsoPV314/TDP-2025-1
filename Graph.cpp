@@ -51,41 +51,12 @@ void Graph::addEdge(int u, int v){
     E++;
 }
 
-void Graph::removeEdge(int u, int v){
-    if(u < 0 || u >= this->V || v < 0 || v >= this->V){
-        return;
-    }
-    M[u][v] = 0;
-    M[v][u] = 0;
-    E--;
-}
-
-List* Graph::getNeighbors(int v){
-    if(v < 0 || v >= this->V){
-        return nullptr;
-    }
-    List* neighbors = new List();
-    for(int i = 0; i < V; i++){
-        if(M[v][i] == 1){
-            neighbors->addLast(i);
-        }
-    }
-    return neighbors;
-}
-
-List* Graph::getNodes(){
-    List* nodes = new List();
-    for(int i = 0; i < V; i++){
-        nodes->addLast(i);
-    }
-    return nodes;
-}
-
 bool Graph::isEmpty(){
     return E == 0;
 }
 
 void Graph::printGraph(){
+    cout << "[Graph::printGraph] Imprimiendo la matriz de adyacencia" << endl;
     for(int i = 0; i < V; i++){
         cout << "[ ";
         for(int j = 0; j < V; j++){
@@ -95,48 +66,35 @@ void Graph::printGraph(){
     }
 }
 
-bool Graph::isDominatingSet(bool currentSet[], int size){
+bool Graph::isValid(int psg, bool* arr){
+    if(psg >= 0){
+        arr[psg] = false;
+    }
+    cout << "[Graph::isValid] calculando que pasa si el psg " << psg << " cruza" << endl;
     for(int i = 0; i < V; i++){
-        if(currentSet[i] == false){
-            bool isDominated = false;
-            for(int j = 0; j < V; j++){
-                if(M[i][j] == 1 && currentSet[j] == true){
-                    isDominated = true;
-                    break;
-                }
-            }
-            if(!isDominated){
+        for(int j = 0; j < V; j++){
+            if(M[i][j] == 1 && arr[i] && arr[j]){
+                if(psg >= 0){
+                    arr[psg] = true;
+                }                
+                cout << "[Graph::isValid] no se puede cruzar el psg " << psg << endl;
                 return false;
             }
         }
     }
+    if(psg >= 0){
+        arr[psg] = true;
+    }
+    cout << "[Graph::isValid] se puede cruzar el psg " << psg << endl;
     return true;
 }
 
-
-// TO DO: Scrap this algorithm and apply perfect elimination ordering to find MDS and hopefully all MDS
-void Graph::findAllMDS(bool currentSet[], int currentSetSize, bool bestSet[], int& bestSize, int pos, bool includedNodes[], int minSetSize){
-    if(currentSetSize > V){
-        return;
-    }
-    if(pos == V){
-        if(currentSetSize == minSetSize && isDominatingSet(currentSet, V)){
-            if(currentSetSize < bestSize){
-                bestSize = currentSetSize;
-                for(int i = 0; i < V; i++){
-                    bestSet[i] = currentSet[i];
-                }
-            }
+Graph* Graph::clonePtr(){
+    Graph* g = new Graph(V);
+    for(int i = 0; i < V; i++){
+        for(int j = 0; j < V; j++){
+            g->M[i][j] = M[i][j];
         }
-        return;
     }
-
-    // include the node
-    currentSet[pos] = true;
-
-    findAllMDS(currentSet, currentSetSize + 1, bestSet, bestSize, pos + 1, includedNodes, minSetSize);
-
-    // exclude the node
-    currentSet[pos] = false;
-    findAllMDS(currentSet, currentSetSize, bestSet, bestSize, pos + 1, includedNodes, minSetSize);
+    return g;
 }

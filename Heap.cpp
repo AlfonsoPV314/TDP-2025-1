@@ -1,81 +1,83 @@
-
 #include "Heap.h"
 
-Heap::Heap(int size){
-    HeapArray = new State*[size];
-    MaxSize = size;
-    Top = 0;
+Heap::Heap(int size) {
+    heap = new State*[size];
+    this->size=size;
+    top=0;
 }
 
-void Heap::push(State* s){
-    if(Top == MaxSize){
+void Heap::push(State *s) {
+    if (top == size) {
         cout << "Heap lleno" << endl;
         // se debe volver a generar el arreglo
-        State** newHeap = new State* [MaxSize * 2];
-        for(int i=0; i<MaxSize; i++){
-            newHeap[i] = HeapArray[i];
+        State **newheap = new State*[size*2];
+        for (int i=0; i<size; i++) {
+            newheap[i] = heap[i];    
         }
-        delete[] HeapArray; // señor c++, en esta direccion de memoria hay un arreglo. encargate de borrar sus elementos también
-        HeapArray = newHeap;
-        MaxSize *= 2;
+        delete[] heap;
+        heap = newheap;
+        size = size*2;
     }
-    HeapArray[Top] = s;
-    Top++;
-    bubbleUp(Top - 1);  // top - 1 es el index del ultimo antes del top (el que antes era el top antes de poner el top)
+    heap[top] = s;
+    top++;
+    bubbleUp(top-1);
 }
 
-void Heap::bubbleUp(int i){
-    if(i != 0){
-        int up = (i - 1)/2;
-        if(HeapArray[up] < HeapArray[i]){   // en la implementacion del profe son con los punteros y el operador < definido custom
-            State* tmp = HeapArray[up]; // guardo el padre
-            HeapArray[up] = HeapArray[i];
-            HeapArray[i] = tmp;
+void Heap::bubbleUp(int i) {
+    if (i != 0) {
+        int up = (i-1)/2;
+        if (*heap[up] < *heap[i]) {
+            State *tmp = heap[up];
+            heap[up] = heap[i];
+            heap[i] = tmp;
             bubbleUp(up);
-        }
+        } 
     }
 }
 
-State* Heap::pop(){
-    if(Top == 0){
+
+State* Heap::pop() {
+    if (top == 0) {
         cout << "Heap vacio" << endl;
         return nullptr;
     }
+    State *s = heap[0]; // elemnto a retornar
 
-    State* s = HeapArray[0];    // elemento a retornar
-    Top--;
-    if(Top > 1){    // si hay un top válido
-        HeapArray[0] = HeapArray[Top - 1];
+    if (top >1) {
+        heap[0] = heap[top-1]; // reemplazo el primer elemento por el ultimo
         bubbleDown(0);
-    }
-    Top--;
+    } 
+    top--;
     return s;
 }
 
-void Heap::bubbleDown(int i){
-    int left = 2 * i + 1;   // hijo izquierdo en un AVL
-    int right = 2 * i + 2;  // hijo derecho en un AVL
+void Heap::bubbleDown(int i) {
+    int left = 2*i+1;
+    int right = 2*i+2;
     int max = i;
-    if(left < Top && HeapArray[max] < HeapArray[left]){
-        max = right;
-    }else if(right < Top && HeapArray[max] < HeapArray[right]){
+    if (left < top // aun sigo dentro del heap 
+        && *heap[max] < *heap[left]) { //el  
+        max = left;
+    } else if (right < top // aun sigo dentro del heap 
+        && *heap[max] < *heap[right]) { //el  
         max = right;
     }
-
-    if (max != i){
-        State* temp = HeapArray[i]; // guardo el padre
-        HeapArray[i] = HeapArray[max];  // guardo el hijo
-        HeapArray[max] = temp;  // guardo el padre
-        bubbleDown(max);    // sigo bajando
-        // si el padre es mayor no se hace nada
-    }
+    if (max != i) {
+        State *tmp= heap[i]; // guardo el padre
+        heap[i] = heap[max]; // guardo el hijo
+        heap[max] = tmp; // guardo el padre
+        bubbleDown(max); // sigo bajando
+    } // si el padre es mayor no se hace nada
 }
 
-void Heap::printHeap(){
-    cout << "[ ";
-    for(int i=0; i<Top; i++){
-        cout << i << ": ";
-        // HeapArray[i]->printState();
+void Heap::printHeap() {
+    if(top == 0) {
+        cout << "Heap vacio" << endl;
+        return;
     }
-    cout << "]" << endl;
+    for(int i=0; i<top; i++) {
+        cout << "[" << i << ": " << heap[i]->operation << ", prioridad: " << heap[i]->priority << "] -> ";
+    }
+    cout << endl;
 }
+
