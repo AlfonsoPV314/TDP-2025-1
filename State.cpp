@@ -4,24 +4,25 @@ State::State() {
     isIzq=false;
     priority=-1;
     parent=nullptr;
+    boats=nullptr;
+    Izq = new bool[3];
+    Der = new bool[3];
     operation="";
     for (int i = 0; i < 3; i++) {
         Izq[i] = false; // todos los elementos en la orilla izquierda
         Der[i] = false; // todos los elementos en la orilla derecha
         //incompArr[i] = 0; // inicializa el contador de incompatibilidades
     }
+    depth = 0;
 }
 
-void State::setInitialState() {
+void State::setInitialState(int psgs, Boat* boats) {
     isIzq=true;
     parent=nullptr;
     priority=0;
-    psgs = 3; // cantidad de pasajeros
+    this->boats = boats;
     operation="Inicializacion";
-    incompMtrx = new Graph(3);
-    incompMtrx->addEdge(ZORRO, CABRA);
-    incompMtrx->addEdge(CABRA, REPOLLO);
-    for(int i = 0; i < psgs; i++) {
+    for(int i = 0; i < sizeof(Izq); i++) {
         Der[i] = false; // todos los elementos en la orilla derecha
         Izq[i] = true; // todos los elementos en la orilla izquierda
     }
@@ -40,8 +41,8 @@ State* State::clone() {
     n->parent = parent;
     n->operation = operation;
     n->priority = priority;
-    n->incompMtrx = incompMtrx->clonePtr(); // se clona la matriz de incompatibilidad
-    n->psgs = psgs;
+    n->depth = depth;
+    n->boats = boats;
     for (int i = 0; i < 3; i++) {
         n->Izq[i] = Izq[i];
         n->Der[i] = Der[i];
@@ -77,11 +78,12 @@ int* State::getPassengers(int size, int& count) {
 }
 
 
-State* State::cross(int* comb, int capacidad) {
+State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     State* n = clone();
+    n->depth++;
 
     if(comb[0] == -1){
-        return crossVoid(comb); // Si la combinación es -1, cruzar vacío
+        return crossVoid(comb, incompMtrx); // Si la combinación es -1, cruzar vacío
     }
 
     for(int i = 0; i < sizeof(comb); i++) {
@@ -98,7 +100,7 @@ State* State::cross(int* comb, int capacidad) {
     for (int i = 0; comb[i] != -1 && i < capacidad; i++) {
         int psg = comb[i];
         if (isIzq && Izq[psg]) {
-            cout << "[State::cross] Cruzando: " << psg << " a orilla derecha" << endl;
+            cout << "[State::cross] Cruzando: " << psg << " a orilla derecha " << endl;
             n->Izq[psg] = false;
             n->Der[psg] = true;
         } else if (!isIzq && Der[psg]) {
@@ -122,9 +124,10 @@ State* State::cross(int* comb, int capacidad) {
 }
 
 
-State* State::crossVoid(int* comb) {
+State* State::crossVoid(int* comb, Graph* incompMtrx) {
     State *n = clone();
     n->operation = "crossVoid";
+    n->depth++;
     // detectar orilla
     if (isIzq) {
         if (incompMtrx->isValid(comb, Izq, 0)){
@@ -161,6 +164,8 @@ void State::printState() {
     if (Der[CABRA]) cout << "Cabra ";
     if (Der[REPOLLO]) cout << "Repollo ";
     cout << endl;
+
+    cout << "Profundidad: " << depth << endl;
     cout << "=======================" << endl;
 }
 

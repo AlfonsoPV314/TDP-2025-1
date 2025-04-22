@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Graph.h"
+#include "Boat.h"
 
 using namespace std;
 
@@ -15,21 +16,21 @@ using namespace std;
 
 class State {
     public:
-        int psgs;   // cantidad de pasajeros. estatico.
-        bool Izq[3];
-        bool Der[3];
+        bool* Izq;
+        bool* Der;
         bool isIzq;
-        Graph* incompMtrx;  // estatico, podria mejorarse para ser solo int** sin necesidad de List ni Node
+        Boat* boats;
         float priority; // prioridad para el heap
         State *parent;
         string operation; 
+        int depth;
         State();
-        void setInitialState(); //
+        void setInitialState(int psgs, Boat* boats); //
         int* getPassengers(int size, int& count); // retorna un arreglo con los pasajeros en la orilla activa
         //int* sortByIncomp(int* arr, int size); // ordena el arreglo de acuerdo a la cantidad de incompatibilidades
         // operaciones que retornan un nuevo estado 
-        State* cross(int* comb, int capacidad); // retorna nulo cuando no se puede
-        State* crossVoid(int* comb); // cruz barco sin item
+        State* cross(int* comb, int capacidad, Graph* incompMtrx); // retorna nulo cuando no se puede
+        State* crossVoid(int* comb, Graph* incompMtrx); // cruz barco sin item
         bool isFinalState(); // retorna verdadero si el estado es final
         State* clone();
         void printState();

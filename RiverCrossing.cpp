@@ -4,8 +4,15 @@ RiverCrossing::RiverCrossing(int size) {
 //    open = new Stack(size); // se cambio a heap
     open = new Heap(size);
     all = new Stack(size);
-    pasos = 0;
+    psgs = 3;
     capacidad = 1; // capacidad del barco
+    incompMtrx = new Graph(3);
+    incompMtrx->addEdge(ZORRO, CABRA);
+    incompMtrx->addEdge(CABRA, REPOLLO);
+    boats = new Boat[1];
+    for(int i = 0; i < 1; i++) {
+        boats[i].setupBoat(i, psgs, 100);
+    }
 }
 
 RiverCrossing::~RiverCrossing(){
@@ -16,7 +23,7 @@ RiverCrossing::~RiverCrossing(){
 State* RiverCrossing::solve() {
     // paso 1: generar estado inicial e insertar en open
     State *init = new State();
-    init->setInitialState();
+    init->setInitialState(psgs, boats);
     init->printState();
     open->push(init);
     all->push(init);
@@ -24,7 +31,6 @@ State* RiverCrossing::solve() {
     // paso 2: mientras open no este vacio
     while (open->top != 0) { // recordar que top es el lugar vacío en el arreglo
         State *s = open->pop();
-        pasos++;
         cout << "[RiverCrossing::solve] NUEVA ITERACION! :D. Camino actual: " << endl;
         s->printPath();
         cout << endl;
@@ -36,10 +42,10 @@ State* RiverCrossing::solve() {
 
         int combCount = 0;
 
-        int* arr = s->getPassengers(s->psgs, combCount);
+        int* arr = s->getPassengers(psgs, combCount);
 
 
-        int** combs = combinaciones(arr, s->psgs, capacidad, combCount); // Generar combinaciones
+        int** combs = combinaciones(arr, psgs, capacidad, combCount); // Generar combinaciones
 
         cout << "[RiverCrossing::solve] Combinaciones generadas: " << combCount << endl;
 
@@ -49,9 +55,10 @@ State* RiverCrossing::solve() {
                 cout << combs[i][j] - 1 << " ";
             }
             cout << "}" << endl;
-            State *ns = s->cross(combs[i], capacidad); // Intentar cruzar con esta combinación
+            State *ns = s->cross(combs[i], capacidad, incompMtrx); // Intentar cruzar con esta combinación
             if (ns != nullptr) {
                 priorityCalc(ns);
+                capacidadCalc(ns);
                 if (!all->find(ns)) {
                     cout << "[RiverCrossing::solve] Estado no estaba en stack. Actualizando heap y stack..." << endl;
                     ns->printState();
@@ -92,12 +99,24 @@ State* RiverCrossing::solve() {
     return nullptr; // caso nuestra búsqueda no llegó a solución
 }
 
+void RiverCrossing::capacidadCalc(State* s){
+    // Se calcula la capacidad del barco como la cantidad de pasajeros en la orilla activa
+    int count = 0;
+    for (int i = 0; i < sizeof(s->boats); i++) {
+        s->boats[i].updateFuelAmt();
+        if (!s->boats[i].isEmpty()) {
+            count += s->boats[i].size;
+        }
+    }
+    capacidad = count;
+}
+
 
 // NOTA: para capacidad = 3, esto hace 10 fokin combinaciones... o hago caso especial, o cambio heuristica. si usas pasos en vez de all->currentSize, el caso con capacidad 3 es 4 pasos, y el caso con capacidad 1 es 9 pasos en vez de 8. estudiar esta heuristica...
 void RiverCrossing::priorityCalc(State* s) {
     // Se calcula la prioridad como la cantidad de elementos en la orilla
     // izquierda que no son incompatibles entre si
-    s->priority = all->currentSize;
+    s->priority = s->depth * 2;
     for (int i = 0; i < 3; i++) {
         if (s->Der[i]) {
             s->priority++;

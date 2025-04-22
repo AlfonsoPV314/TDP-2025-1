@@ -2,23 +2,28 @@
 
 int main() {
     Heap *h = new Heap(2);
+    Boat* b = new Boat[1];
+    b[0].setupBoat(0, 1, 100);
     State *s = new State();
-    s->setInitialState();
+    Graph *g = new Graph(3);
+    g->addEdge(0, 1);
+    g->addEdge(1, 2);
+    s->setInitialState(3, b);
     h->push(s);
     int* arr1 = new int[1];
     arr1[0] = CABRA;
-    State *s1 = s->cross(arr1, 1);
+    State *s1 = s->cross(arr1, 1, g);
     h->push(s1);
     int arr4[2] = {-1, 0};
-    State *s2 = s1->crossVoid(arr4);
+    State *s2 = s1->crossVoid(arr4, g);
     h->push(s2);
     int* arr2 = new int[1];
     arr2[0] = ZORRO;
-    State *s3 = s2->cross(arr2, 1);
+    State *s3 = s2->cross(arr2, 1, g);
     h->push(s3);
     int* arr3 = new int[1];
     arr3[0] = CABRA;
-    State *s4 = s3->cross(arr3, 1);
+    State *s4 = s3->cross(arr3, 1, g);
     h->push(s4);
 
     h->printHeap();

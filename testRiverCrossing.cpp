@@ -11,7 +11,7 @@ int main() {
     } else {
         cout << "[main] No se encontro solucion." << endl;
     }
-    cout << "en " << r.pasos << " pasos" <<endl;
+    cout << "en " << s->depth << " pasos" <<endl;
 
     // // Test de combinaciones
     // int arr[3] = {1, 2, 3};

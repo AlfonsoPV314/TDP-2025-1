@@ -7,7 +7,6 @@ class Stack {
     public:
     State **arr;
     int size;
-    int currentSize;
     int top;
     Stack(int size);
     void push(State* s);
