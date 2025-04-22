@@ -14,6 +14,6 @@ public:
     int* sortByIncomp(int* arr, int size); // sort array by incompatibilities
     bool isEmpty();   // check if graph is empty
     void printGraph();   // print graph
-    bool isValid(int psg, bool* psgs);
+    bool isValid(int* comb, bool* psgs, int capacidad); // check if combination is valid
     Graph* clonePtr();
 };

@@ -49,50 +49,91 @@ State* State::clone() {
     return n;    
 }
 
+int* State::getPassengers(int size, int& count) {
+    cout << "[State::getPassengers] INPUT: size = " << size << " count = " << count << endl;
+    // Crear un arreglo dinámico para almacenar los índices
+    int* result = new int[size];
+    count = 0;
 
-
-
-State* State::cross(int psg){
-    State *n = clone();
-    // detectar orilla
-    if(psg == this->psgs){
-        return crossVoid();
-    }
-    if (isIzq && Izq[psg]){
-        if (incompMtrx->isValid(psg, Izq)){
-            n->operation = "Cruza " + to_string(psg);
-            n->Izq[psg] = false;
-            n->Der[psg] = true;
-            n->isIzq = false;
-            n->parent=this;
-            return n;
-        }
-    } 
-    else if (!isIzq && Der[psg]){
-        if (incompMtrx->isValid(psg, Der)){
-            n->operation = "Cruza " + to_string(psg);
-            n->Der[psg] = false;
-            n->Izq[psg] = true;
-            n->isIzq = true;
-            n->parent=this; 
-            return n;
+    // Recorrer el arreglo para encontrar pasajeros en la orilla activa
+    for (int i = 0; i < size; i++) {
+        if ((isIzq && Izq[i]) || (!isIzq && !Izq[i])) {
+            result[count++] = i + 1;
         }
     }
-    return nullptr; 
+
+    // Ajustar el tamaño del arreglo para que termine con un cero
+    int* finalResult = new int[count + 1];
+    cout << "[State::getPassengers] OUTPUT: ";
+    for (int i = 0; i < count; i++) {
+        finalResult[i] = result[i];
+        cout << finalResult[i] << " ";
+    }
+    cout << endl;
+    finalResult[count] = 0; // Indicador de fin de lista
+    delete[] result;
+
+    return finalResult;
 }
 
-State* State::crossVoid() {
+
+State* State::cross(int* comb, int capacidad) {
+    State* n = clone();
+
+    if(comb[0] == -1){
+        return crossVoid(comb); // Si la combinación es -1, cruzar vacío
+    }
+
+    for(int i = 0; i < sizeof(comb); i++) {
+        comb[i]--;
+    }
+
+    // Validar si la combinación puede cruzar
+    bool* currentSide = isIzq ? Izq : Der;
+    if (!incompMtrx->isValid(comb, currentSide, capacidad)) {
+        return nullptr; // Si no es válida, no se realiza el cruce
+    }
+
+    // Actualizar el estado para todos los pasajeros de la combinación
+    for (int i = 0; comb[i] != -1 && i < capacidad; i++) {
+        int psg = comb[i];
+        if (isIzq && Izq[psg]) {
+            cout << "[State::cross] Cruzando: " << psg << " a orilla derecha" << endl;
+            n->Izq[psg] = false;
+            n->Der[psg] = true;
+        } else if (!isIzq && Der[psg]) {
+            cout << "[State::cross] Cruzando: " << psg << " a orilla izquierda" << endl;
+            n->Der[psg] = false;
+            n->Izq[psg] = true;
+        }
+    }
+
+    // Actualizar el estado general
+    n->isIzq = !isIzq;
+    n->operation = "Cruza {";
+    for (int i = 0; comb[i] != -1 && i < capacidad; i++) {
+        n->operation += to_string(comb[i]) + (comb[i + 1] != -1 ? ", " : "");
+    }
+    n->operation += "}";
+    n->parent = this;
+    cout << endl;
+
+    return n;
+}
+
+
+State* State::crossVoid(int* comb) {
     State *n = clone();
     n->operation = "crossVoid";
     // detectar orilla
     if (isIzq) {
-        if (incompMtrx->isValid(-1, Izq)){
+        if (incompMtrx->isValid(comb, Izq, 0)){
             n->isIzq = false;
             n->parent = this; // OJO: faltaba esto
             return n;
         }
     } else {
-        if (incompMtrx->isValid(-1, Der)){
+        if (incompMtrx->isValid(comb, Der, 0)){
             n->isIzq = true;
             n->parent = this;
             return n;

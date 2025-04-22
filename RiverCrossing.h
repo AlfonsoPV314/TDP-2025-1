@@ -7,6 +7,7 @@ class RiverCrossing {
     Heap *open; // Los estado por visitar
     Stack *all; // todos los estados aceptados
     int pasos;
+    int capacidad; // capacidad del barco
     RiverCrossing(int size); // size es el tamaño de cada repositorio
     ~RiverCrossing();
     State* solve(); // Resuelve el problema retornando el estado solucion

@@ -25,10 +25,11 @@ class State {
         string operation; 
         State();
         void setInitialState(); //
+        int* getPassengers(int size, int& count); // retorna un arreglo con los pasajeros en la orilla activa
         //int* sortByIncomp(int* arr, int size); // ordena el arreglo de acuerdo a la cantidad de incompatibilidades
         // operaciones que retornan un nuevo estado 
-        State* cross(int psg); // retorna nulo cuando no se puede
-        State* crossVoid(); // cruz barco sin item
+        State* cross(int* comb, int capacidad); // retorna nulo cuando no se puede
+        State* crossVoid(int* comb); // cruz barco sin item
         bool isFinalState(); // retorna verdadero si el estado es final
         State* clone();
         void printState();

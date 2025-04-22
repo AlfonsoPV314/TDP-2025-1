@@ -8,11 +8,14 @@ int main() {
     st->printState();
     cout << "**************" << endl;
     cout << "Estado st1" << endl;
-    State *st1 = st->cross(CABRA);
+    int* arr = new int[1];
+    arr[0] = CABRA;
+    State *st1 = st->cross(arr, 1);
     st1->printState();
     cout << "**************" << endl;
     cout << "Estado st2" << endl;
-    State *st2 = st1->crossVoid();
+    int arr2[2] = {-1, 0};
+    State *st2 = st1->crossVoid(arr2);
     st2->printState();
     cout << "**************" << endl;
     cout << "push estados st, st1, st2" << endl;

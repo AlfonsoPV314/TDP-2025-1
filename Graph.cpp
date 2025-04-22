@@ -50,28 +50,44 @@ void Graph::printGraph(){
     }
 }
 
-bool Graph::isValid(int psg, bool* arr){
-    if(psg >= 0){
-        arr[psg] = false;
+bool Graph::isValid(int* comb, bool* arr, int capacidad) {
+    // Marcar los pasajeros de la combinación como ausentes temporalmente
+    if(comb[0] != -1){
+        for (int i = 0; comb[i] != -1; i++) {
+            arr[comb[i]] = false;
+        }
     }
-    cout << "[Graph::isValid] calculando que pasa si el psg " << psg << " cruza" << endl;
-    for(int i = 0; i < V; i++){
-        for(int j = 0; j < V; j++){
-            if(M[i][j] == 1 && arr[i] && arr[j]){
-                if(psg >= 0){
-                    arr[psg] = true;
-                }                
-                cout << "[Graph::isValid] no se puede cruzar el psg " << psg << endl;
+
+
+    // cout << "[Graph::isValid] Verificando combinación: {";
+    // for (int i = 0; comb[i] != -1; i++) {
+    //     cout << comb[i] << (comb[i + 1] != 0 ? ", " : "");
+    // }
+    // cout << "}" << endl;
+
+    // Validar si hay conflictos entre los pasajeros restantes
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (M[i][j] == 1 && arr[i] && arr[j]) {
+                // Restaurar el estado original antes de salir
+                for (int k = 0; comb[k] != -1 && k < capacidad; k++) {
+                    arr[comb[k]] = true;
+                }
+                cout << "[Graph::isValid] Combinación inválida por conflicto entre " << i << " y " << j << endl;
                 return false;
             }
         }
     }
-    if(psg >= 0){
-        arr[psg] = true;
+
+    // Restaurar el estado original
+    for (int i = 0; comb[i] != -1; i++) {
+        arr[comb[i]] = true;
     }
-    cout << "[Graph::isValid] se puede cruzar el psg " << psg << endl;
+
+    cout << "[Graph::isValid] Combinación válida" << endl;
     return true;
 }
+
 
 
 
