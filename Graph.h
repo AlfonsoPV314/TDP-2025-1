@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+//NOTA: CAMBIAR GRAFO POR BITMASK EN EL FUTURO
 
 class Graph{
 public:

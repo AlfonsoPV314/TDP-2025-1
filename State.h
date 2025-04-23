@@ -16,6 +16,7 @@ using namespace std;
 
 class State {
     public:
+        // NOTA: CAMBIAR Izq Y Der POR SOLO UN INT Izq EN UN FUTURO
         bool* Izq;
         bool* Der;
         bool isIzq;
@@ -24,8 +25,10 @@ class State {
         State *parent;
         string operation; 
         int depth;
-        State();
-        void setInitialState(int psgs, Boat* boats); //
+        int psgs;
+        int capacidadActual;
+        State(int psgs, Boat* boats, int capacidad);
+        void setInitialState(); //
         int* getPassengers(int size, int& count); // retorna un arreglo con los pasajeros en la orilla activa
         //int* sortByIncomp(int* arr, int size); // ordena el arreglo de acuerdo a la cantidad de incompatibilidades
         // operaciones que retornan un nuevo estado 
@@ -33,7 +36,7 @@ class State {
         State* crossVoid(int* comb, Graph* incompMtrx); // cruz barco sin item
         bool isFinalState(); // retorna verdadero si el estado es final
         State* clone();
-        void printState();
+        void printState(int boatCant);
         void printPath(); // imprime recursivamente la secuencia de operaciones
         bool operator==(State s);
         bool operator<(State s);

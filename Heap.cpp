@@ -7,6 +7,7 @@ Heap::Heap(int size) {
 }
 
 void Heap::push(State *s) {
+    cout << "top: " << top << endl;
     if (top == size) {
         cout << "Heap lleno" << endl;
         // se debe volver a generar el arreglo
@@ -18,20 +19,26 @@ void Heap::push(State *s) {
         heap = newheap;
         size = size*2;
     }
+    cout << "flag1" << endl;
     heap[top] = s;
+    cout << "flag21" << endl;
     top++;
+    cout << "top: " << top << " top - 1: " << top-1 << endl;
     bubbleUp(top-1);
 }
 
 void Heap::bubbleUp(int i) {
     if (i != 0) {
         int up = (i-1)/2;
+        cout << up << " " << i << endl;
+        heap[0]->printState(1);
         if (*heap[up] < *heap[i]) {
             State *tmp = heap[up];
             heap[up] = heap[i];
             heap[i] = tmp;
             bubbleUp(up);
         } 
+        cout << "glag" << endl;
     }
 }
 

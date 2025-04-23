@@ -5,13 +5,10 @@ int main() {
     State* s = r.solve();
     cout << "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" << endl;
     if (s != nullptr) {
-        cout << "[main] Solucion encontrada!" << endl;
         s->printPath();
         cout << endl;
-    } else {
-        cout << "[main] No se encontro solucion." << endl;
-    }
-    cout << "en " << s->depth << " pasos" <<endl;
+        cout << "en " << s->depth << " pasos" <<endl;
+    } 
 
     // // Test de combinaciones
     // int arr[3] = {1, 2, 3};

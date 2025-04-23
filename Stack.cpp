@@ -29,7 +29,6 @@ bool Stack::find(State *s) {
         return false;
     } 
     for(int k=0; k<top; k++) {
-        cout << "Comparando " << k << endl;
         if (*s == *arr[k]) {
             return true;
         }

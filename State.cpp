@@ -1,12 +1,14 @@
 #include "State.h"
 
-State::State() {
+State::State(int psgs, Boat* boats, int capacidad) {
     isIzq=false;
     priority=-1;
     parent=nullptr;
-    boats=nullptr;
-    Izq = new bool[3];
-    Der = new bool[3];
+    this->boats = boats;
+    this->psgs = psgs;
+    Izq = new bool[psgs];
+    Der = new bool[psgs];
+    capacidadActual = capacidad;
     operation="";
     for (int i = 0; i < 3; i++) {
         Izq[i] = false; // todos los elementos en la orilla izquierda
@@ -16,11 +18,10 @@ State::State() {
     depth = 0;
 }
 
-void State::setInitialState(int psgs, Boat* boats) {
+void State::setInitialState() {
     isIzq=true;
     parent=nullptr;
     priority=0;
-    this->boats = boats;
     operation="Inicializacion";
     for(int i = 0; i < sizeof(Izq); i++) {
         Der[i] = false; // todos los elementos en la orilla derecha
@@ -36,7 +37,7 @@ void State::setInitialState(int psgs, Boat* boats) {
 }
 
 State* State::clone() {
-    State *n = new State();
+    State *n = new State(n->psgs, n->boats, n->capacidadActual);
     n->isIzq = isIzq;
     n->parent = parent;
     n->operation = operation;
@@ -62,6 +63,7 @@ int* State::getPassengers(int size, int& count) {
             result[count++] = i + 1;
         }
     }
+    cout << "[State::getPassengers] count: " << count << endl;
 
     // Ajustar el tamaño del arreglo para que termine con un cero
     int* finalResult = new int[count + 1];
@@ -149,7 +151,7 @@ bool State::isFinalState() {
     return(Der[ZORRO]&&Der[CABRA]&&Der[REPOLLO]);
 }    
 
-void State::printState() {
+void State::printState(int boatCant) {
     cout << "[State::printState]" << operation << endl;
     cout << "=======================" << endl;
     cout << "Barco en la orilla: " << (isIzq ? "Izquierda" : "Derecha") << endl;
@@ -165,7 +167,12 @@ void State::printState() {
     if (Der[REPOLLO]) cout << "Repollo ";
     cout << endl;
 
+    cout << "Capacidad actual: " << capacidadActual << endl;
     cout << "Profundidad: " << depth << endl;
+    cout << "Barcos: " << endl;
+    for (int i = 0; i < boatCant; i++) {
+        cout << "Barco " << boats[i].id << " (capacidad: " << boats[i].capacidad << ", combustible: " << boats[i].fuelAmt << ") " << endl;
+    }
     cout << "=======================" << endl;
 }
 
