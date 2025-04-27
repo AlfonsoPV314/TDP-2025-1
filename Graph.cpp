@@ -52,13 +52,15 @@ void Graph::printGraph(){
 
 bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     // Marcar los pasajeros de la combinación como ausentes temporalmente
-    if(comb[0] > -1){
-        for (int i = 0; i < capacidad; i++) {
-            if(comb[i] > -1){
-                arr[comb[i]] = false;
-            }
+    cout << "[Graph::isValid] capacidad: " << capacidad << endl;
+    cout << "[Graph::isValid] Verificando combinación: {";
+    for (int i = 0; i < capacidad; i++) {
+        if(comb[i] > -1){
+            cout << comb[i] << " ";
+            arr[comb[i]] = false;
         }
     }
+    cout << "}" << endl;
 
 
     // cout << "[Graph::isValid] Verificando combinación: {";

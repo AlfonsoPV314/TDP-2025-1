@@ -84,17 +84,17 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     State* n = clone();
     n->depth++;
 
-    if(comb[0] == -1){
-        return crossVoid(comb, incompMtrx); // Si la combinación es -1, cruzar vacío
-    }
-
     for(int i = 0; i < capacidad; i++) {
         comb[i]--;
     }
 
     // Validar si la combinación puede cruzar
     bool* currentSide = isIzq ? Izq : Der;
+    cout << "[State::cross] capacidad: " << capacidad << endl;
     if (!incompMtrx->isValid(comb, currentSide, capacidad)) {
+        for(int i = 0; i < capacidad; i++) {
+            comb[i]++;
+        }
         return nullptr; // Si no es válida, no se realiza el cruce
     }
 
@@ -119,8 +119,9 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     n->operation = "Cruza {";
     for (int i = 0; i < capacidad; i++) {
         if (comb[i] > -1) {
-            n->operation += to_string(comb[i]) + ", ";   
+            n->operation += to_string(comb[i]) + ", ";  
         }
+        comb[i]++; // Volver a la numeración original
     }
     n->operation += "}";
     n->parent = this;

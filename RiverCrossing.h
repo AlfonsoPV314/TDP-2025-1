@@ -16,6 +16,6 @@ class RiverCrossing {
     void addState(State* ns, int combSize); // agrega un nuevo estado a la pila y al heap
     void capacidadCalc(State* s, int combSize); // calcula la capacidad del barco
     void priorityCalc(State* s, int combSize); // calcula la prioridad de un estado
-    int** combinaciones(int* arr, int size, int& count); // genera todas las combinaciones de un arreglo
-    void combinacion(int**& output, int* arr, int* data, int start, int end, int index, int r, int& combIndex); // genera todas las combinaciones de un arreglo
+    void combinaciones(State* s, int* arr, int size, int& count); // genera todas las combinaciones de un arreglo
+    void combinacion(State* s, int* arr, int* data, int start, int end, int index, int r, int& combIndex); // genera todas las combinaciones de un arreglo
 };
