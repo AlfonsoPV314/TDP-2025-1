@@ -19,9 +19,7 @@ void Heap::push(State *s) {
         heap = newheap;
         size = size*2;
     }
-    cout << "flag1" << endl;
     heap[top] = s;
-    cout << "flag21" << endl;
     top++;
     cout << "top: " << top << " top - 1: " << top-1 << endl;
     bubbleUp(top-1);

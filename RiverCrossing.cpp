@@ -1,56 +1,56 @@
 #include "RiverCrossing.h"
 
-RiverCrossing::RiverCrossing(int size) {
-//    open = new Stack(size); // se cambio a heap
-    psgs = 9;
-    capacidad = 0; // capacidad del barco
-    incompMtrx = new Graph(9);
-    incompMtrx->addEdge(0, 2);
-    incompMtrx->addEdge(1, 3);
-    incompMtrx->addEdge(1, 5);
-    incompMtrx->addEdge(1, 6);
-    incompMtrx->addEdge(2, 4);
-    incompMtrx->addEdge(2, 7);
-    incompMtrx->addEdge(3, 4);
-    incompMtrx->addEdge(4, 5);
-    incompMtrx->addEdge(4, 6);
-    incompMtrx->addEdge(5, 7);
-    incompMtrx->addEdge(5, 8);
-    incompMtrx->addEdge(6, 7);
-    incompMtrx->addEdge(6, 8);
-    open = new Heap(size);
-    all = new Stack(size);
-    boatCant = -1; // cantidad de barcos
-}
-
-// RiverCrossing::RiverCrossing(int size, int psgs, int boatCant, Boat* boats, Graph* incompMtrx) {
+// RiverCrossing::RiverCrossing(int size) {
+// //    open = new Stack(size); // se cambio a heap
+//     psgs = 9;
+//     capacidad = 0; // capacidad del barco
+//     incompMtrx = new Graph(9);
+//     incompMtrx->addEdge(0, 2);
+//     incompMtrx->addEdge(1, 3);
+//     incompMtrx->addEdge(1, 5);
+//     incompMtrx->addEdge(1, 6);
+//     incompMtrx->addEdge(2, 4);
+//     incompMtrx->addEdge(2, 7);
+//     incompMtrx->addEdge(3, 4);
+//     incompMtrx->addEdge(4, 5);
+//     incompMtrx->addEdge(4, 6);
+//     incompMtrx->addEdge(5, 7);
+//     incompMtrx->addEdge(5, 8);
+//     incompMtrx->addEdge(6, 7);
+//     incompMtrx->addEdge(6, 8);
 //     open = new Heap(size);
 //     all = new Stack(size);
-//     this->psgs = psgs;
-//     this->incompMtrx = incompMtrx;
-//     this->boatCant = boatCant; // cantidad de barcos
-//     this->capacidad = 0;
-//     for(int i = 0; i < boatCant; i++) {
-//         this->capacidad+=boats[i].capacidad;
-//     }
+//     boatCant = -1; // cantidad de barcos
 // }
+
+RiverCrossing::RiverCrossing(int size, int psgs, int boatCant, Boat* boats, Graph* incompMtrx) {
+    open = new Heap(size);
+    all = new Stack(size);
+    this->psgs = psgs;
+    this->incompMtrx = incompMtrx;
+    this->boatCant = boatCant; // cantidad de barcos
+    this->capacidad = 0;
+    for(int i = 0; i < boatCant; i++) {
+        this->capacidad+=boats[i].capacidad;
+    }
+}
 
 RiverCrossing::~RiverCrossing(){
     delete open;
     delete all;
 }
 
-State* RiverCrossing::solve() {
+State* RiverCrossing::solve(Boat* boats) {
     // paso 1: generar estado inicial e insertar en open
-    boatCant = 3; // cantidad de barcos
-    capacidad = 0;
-    Boat* boats = new Boat[boatCant];
-    boats[0].setupBoat(0, 1, 100);
-    boats[1].setupBoat(1, 2, 98);
-    boats[2].setupBoat(2, 1, 99);
-    for(int i = 0; i < boatCant; i++) {
-        this->capacidad+=boats[i].capacidad;
-    }
+    // boatCant = 3; // cantidad de barcos
+    // capacidad = 0;
+    // Boat* boats = new Boat[boatCant];
+    // boats[0].setupBoat(0, 1, 100);
+    // boats[1].setupBoat(1, 2, 98);
+    // boats[2].setupBoat(2, 1, 99);
+    // for(int i = 0; i < boatCant; i++) {
+    //     this->capacidad+=boats[i].capacidad;
+    // }
     State *init = new State(psgs, boats, capacidad);
     init->setInitialState();
     init->printState(boatCant);

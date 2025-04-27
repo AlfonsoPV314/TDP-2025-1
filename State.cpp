@@ -52,7 +52,7 @@ State* State::clone() {
 }
 
 int* State::getPassengers(int size, int& count) {
-    cout << "[State::getPassengers] INPUT: size = " << size << " count = " << count << endl;
+    // cout << "[State::getPassengers] INPUT: size = " << size << " count = " << count << endl;
     // Crear un arreglo dinámico para almacenar los índices
     int* result = new int[size];
     count = 0;
@@ -63,16 +63,16 @@ int* State::getPassengers(int size, int& count) {
             result[count++] = i + 1;
         }
     }
-    cout << "[State::getPassengers] count: " << count << endl;
+    // cout << "[State::getPassengers] count: " << count << endl;
 
     // Ajustar el tamaño del arreglo para que termine con un cero
     int* finalResult = new int[count + 1];
-    cout << "[State::getPassengers] OUTPUT: ";
+    // cout << "[State::getPassengers] OUTPUT: ";
     for (int i = 0; i < count; i++) {
         finalResult[i] = result[i];
-        cout << finalResult[i] << " ";
+        // cout << finalResult[i] << " ";
     }
-    cout << endl;
+    // cout << endl;
     finalResult[count] = 0; // Indicador de fin de lista
     delete[] result;
 
@@ -90,7 +90,7 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
 
     // Validar si la combinación puede cruzar
     bool* currentSide = isIzq ? Izq : Der;
-    cout << "[State::cross] capacidad: " << capacidad << endl;
+    // cout << "[State::cross] capacidad: " << capacidad << endl;
     if (!incompMtrx->isValid(comb, currentSide, capacidad)) {
         for(int i = 0; i < capacidad; i++) {
             comb[i]++;

@@ -1,4 +1,4 @@
-all: testRiverCrossing
+all: main #testList testGraph testHeap testState testStack testRiverCrossing
 
 ClaseEjemplo.o: ClaseEjemplo.h ClaseEjemplo.cpp
 	g++ -g -c ClaseEjemplo.cpp
@@ -12,6 +12,12 @@ Stack.o: Stack.cpp Stack.h
 RiverCrossing.o: RiverCrossing.h RiverCrossing.cpp
 	g++ -g -c RiverCrossing.cpp
 
+ReadFile.o: ReadFile.cpp ReadFile.h
+	g++ -g -c ReadFile.cpp
+
+Vector.o: Vector.cpp Vector.h
+	g++ -g -c Vector.cpp
+
 Heap.o: Heap.cpp Heap.h
 	g++ -g -c Heap.cpp
 
@@ -20,6 +26,9 @@ Graph.o: Graph.cpp Graph.h
 
 Boat.o: Boat.cpp Boat.h
 	g++ -g -c Boat.cpp
+
+main: main.cpp Graph.o Boat.o State.o Stack.o Heap.o RiverCrossing.o Vector.o ReadFile.o
+	g++ -g Graph.o Boat.o State.o Stack.o Heap.o RiverCrossing.o Vector.o ReadFile.o main.cpp -o main
 
 testGraph: Graph.o testGraph.cpp
 	g++ -g Graph.o testGraph.cpp -o testGraph
@@ -37,4 +46,4 @@ testHeap: Boat.o Graph.o State.o Heap.o testHeap.cpp
 	g++ -g Boat.o Graph.o State.o Heap.o testHeap.cpp -o testHeap
 
 clean:
-	rm -rf *.o testList testGraph testHeap testState testStack testRiverCrossing testGraph testList
+	rm -rf *.o main testList testGraph testHeap testState testStack testRiverCrossing testGraph testList
