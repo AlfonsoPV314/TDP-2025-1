@@ -2,11 +2,22 @@
 
 RiverCrossing::RiverCrossing(int size) {
 //    open = new Stack(size); // se cambio a heap
-    psgs = 3;
+    psgs = 9;
     capacidad = -1; // capacidad del barco
-    incompMtrx = new Graph(3);
-    incompMtrx->addEdge(ZORRO, CABRA);
-    incompMtrx->addEdge(CABRA, REPOLLO);
+    incompMtrx = new Graph(9);
+    incompMtrx->addEdge(0, 2);
+    incompMtrx->addEdge(1, 3);
+    incompMtrx->addEdge(1, 5);
+    incompMtrx->addEdge(1, 6);
+    incompMtrx->addEdge(2, 4);
+    incompMtrx->addEdge(2, 7);
+    incompMtrx->addEdge(3, 4);
+    incompMtrx->addEdge(4, 5);
+    incompMtrx->addEdge(4, 6);
+    incompMtrx->addEdge(5, 7);
+    incompMtrx->addEdge(5, 8);
+    incompMtrx->addEdge(6, 7);
+    incompMtrx->addEdge(6, 8);
     open = new Heap(size);
     all = new Stack(size);
     boatCant = -1; // cantidad de barcos
@@ -19,11 +30,13 @@ RiverCrossing::~RiverCrossing(){
 
 State* RiverCrossing::solve() {
     // paso 1: generar estado inicial e insertar en open
-    boatCant = 1; // cantidad de barcos
+    boatCant = 3; // cantidad de barcos
     capacidad = 0;
-    Boat* boats = new Boat[1];
+    Boat* boats = new Boat[boatCant];
+    boats[0].setupBoat(0, 1, 100);
+    boats[1].setupBoat(1, 2, 98);
+    boats[2].setupBoat(2, 1, 99);
     for(int i = 0; i < boatCant; i++) {
-        boats[i].setupBoat(i, 1, 100);
         this->capacidad+=boats[i].capacidad;
     }
     State *init = new State(psgs, boats, capacidad);
@@ -67,6 +80,7 @@ State* RiverCrossing::solve() {
                     cout << combs[i][j] - 1 << " ";
                 }
                 cout << "}" << endl;
+
                 State *ns = s->cross(combs[i], capacidad, incompMtrx); // Intentar cruzar con esta combinación
                 addState(ns, combSize); // Agregar el nuevo estado al heap y stack
 
@@ -138,8 +152,8 @@ void RiverCrossing::priorityCalc(State* s, int combSize) {
     // Se calcula la prioridad como la cantidad de elementos en la orilla
     // izquierda que no son incompatibles entre si
     s->priority = (s->depth + combSize) * 2;
-    for (int i = 0; i < 3; i++) {
-        if (s->Der[i]) {
+    for (int i = 0; i < psgs; i++) {
+        if (!s->Izq[i]) {
             s->priority++;
         }
     }
@@ -148,9 +162,10 @@ void RiverCrossing::priorityCalc(State* s, int combSize) {
 int** RiverCrossing::combinaciones(int* arr, int size, int& combSize) {
     cout << "[RiverCrossing::combinaciones] INPUT: " << endl;
     cout << "arr: ";
-    for (int i = 0; i < psgs; i++) {
+    for (int i = 0; i < combSize; i++) {
         cout << arr[i] << " ";
     }
+    cout << "sizeof arr: " << sizeof(arr) << endl;
     cout << endl;
     cout << "size: " << size << endl;
     cout << "combSize: " << combSize << endl;
@@ -165,7 +180,7 @@ int** RiverCrossing::combinaciones(int* arr, int size, int& combSize) {
     int* arrReal = new int[combSize];
     int idx = 0;
     cout << "[RiverCrossing::combinaciones] arrReal[ ";
-    for (int i = 0; i < psgs; i++) {
+    for (int i = 0; i < combSize; i++) {
         if (arr[i] > 0) {
             arrReal[idx++] = arr[i];
             cout << arrReal[idx - 1] << " ";

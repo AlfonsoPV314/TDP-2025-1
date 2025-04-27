@@ -1,7 +1,7 @@
 #include "RiverCrossing.h"
 
 int main() {
-    RiverCrossing r(100);
+    RiverCrossing r(1000);
     State* s = r.solve();
     cout << "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" << endl;
     if (s != nullptr) {

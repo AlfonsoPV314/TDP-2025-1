@@ -52,9 +52,11 @@ void Graph::printGraph(){
 
 bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     // Marcar los pasajeros de la combinación como ausentes temporalmente
-    if(comb[0] != -1){
-        for (int i = 0; comb[i] != -1; i++) {
-            arr[comb[i]] = false;
+    if(comb[0] > -1){
+        for (int i = 0; i < capacidad; i++) {
+            if(comb[i] > -1){
+                arr[comb[i]] = false;
+            }
         }
     }
 
@@ -70,8 +72,10 @@ bool Graph::isValid(int* comb, bool* arr, int capacidad) {
         for (int j = 0; j < V; j++) {
             if (M[i][j] == 1 && arr[i] && arr[j]) {
                 // Restaurar el estado original antes de salir
-                for (int k = 0; comb[k] != -1 && k < capacidad; k++) {
-                    arr[comb[k]] = true;
+                for (int k = 0; k < capacidad; k++) {
+                    if(comb[k] > -1){
+                        arr[comb[k]] = true;
+                    }
                 }
                 cout << "[Graph::isValid] Combinación inválida por conflicto entre " << i << " y " << j << endl;
                 return false;
@@ -80,8 +84,10 @@ bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     }
 
     // Restaurar el estado original
-    for (int i = 0; comb[i] != -1; i++) {
-        arr[comb[i]] = true;
+    for (int i = 0; i < capacidad; i++) {
+        if(comb[i] > -1){
+            arr[comb[i]] = true;
+        }
     }
 
     cout << "[Graph::isValid] Combinación válida" << endl;
