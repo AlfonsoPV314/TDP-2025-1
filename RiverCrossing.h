@@ -11,6 +11,7 @@ class RiverCrossing {
     int capacidad; // capacidad del barco
     Graph* incompMtrx;  // estatico, podria mejorarse para ser solo int** sin necesidad de List ni Node
     RiverCrossing(int size); // size es el tamaño de cada repositorio
+    // RiverCrossing(int size, int psgs, int boatCant, Boat* boats, Graph* incompMtrx); // size es el tamaño de cada repositorio
     ~RiverCrossing();
     State* solve(); // Resuelve el problema retornando el estado solucion
     void addState(State* ns, int combSize); // agrega un nuevo estado a la pila y al heap

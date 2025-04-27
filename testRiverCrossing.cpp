@@ -1,14 +1,20 @@
 #include "RiverCrossing.h"
+#include <chrono>
+
 
 int main() {
     RiverCrossing r(1000);
+    auto start = std::chrono::high_resolution_clock::now();
     State* s = r.solve();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     cout << "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" << endl;
     if (s != nullptr) {
         s->printPath();
         cout << endl;
         cout << "en " << s->depth << " pasos" <<endl;
     } 
+    cout << "Tiempo de ejecución: " << duration.count() << " ms" << endl;
 
     // // Test de combinaciones
     // int arr[3] = {1, 2, 3};

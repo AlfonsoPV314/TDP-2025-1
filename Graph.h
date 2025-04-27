@@ -17,4 +17,6 @@ public:
     void printGraph();   // print graph
     bool isValid(int* comb, bool* psgs, int capacidad); // check if combination is valid
     Graph* clonePtr();
+    Graph* arrSubgraph(int* arr, int size); // create subgraph from array
+    int mvc2Approx(Graph* g); // calcula una aproximacion que es al menos 2 veces el valor de la minima covertura de vértices
 };

@@ -14,6 +14,17 @@ void Boat::setupBoat(int id, int size, int fuel) {
     cout << "[Boat::setupBoat] Barco " << id << " creado con capacidad " << size << " y combustible " << fuelAmt << endl;
 }
 
+void Boat::setIdSize(int id, int size) {
+    this->id = id;
+    capacidad = size;
+    cout << "[Boat::setSize] Barco " << id << " capacidad: " << capacidad << endl;
+}
+
+void Boat::setFuel(int fuel) {
+    fuelAmt = fuel;
+    cout << "[Boat::setFuel] Barco " << id << " combustible: " << fuelAmt << endl;
+}
+
 void Boat::updateFuelAmt() {
     fuelAmt--;
     cout << "[Boat::updateFuelAmt] Barco " << id << " fuelAmt: " << fuelAmt << endl;

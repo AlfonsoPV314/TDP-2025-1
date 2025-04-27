@@ -131,3 +131,43 @@ Graph* Graph::clonePtr(){
     }
     return g;
 }
+
+Graph* Graph::arrSubgraph(int* arr, int size) {
+    Graph* g = new Graph(size);
+    // cout << "[Graph::arrSubgraph] size: " << size << endl;
+    // cout << "[Graph::arrSubgraph] arr: ";
+    // for (int i = 0; i < size; i++) {
+    //     cout << arr[i] << " ";
+    // }
+    cout << endl;
+    for (int i = 0; i < size; i++) {
+        // cout << "[Graph::arrSubgraph] i: " << i << " arr[i]: " << arr[i] << endl;
+        for (int j = 0; j < size; j++) {
+            // cout << "[Graph::arrSubgraph] j: " << j << " arr[j]: " << arr[j] << endl;
+            g->M[i][j] = M[arr[i] - 1][arr[j] - 1];
+        }
+        g->incompArr[i] = incompArr[arr[i] - 1];
+    }
+    return g;
+}
+
+
+int Graph::mvc2Approx(Graph* g) {
+    bool visited[g->V];
+    for(int i = 0; i < g->V; i++){
+        visited[i] = false;
+    }
+    int count = 0;
+    for(int i = 0; i < g->V; i++){
+        if(!visited[i]){
+            count++;
+            visited[i] = true;
+            for(int j = 0; j < g->V; j++){
+                if(g->M[i][j] == 1 && !visited[j]){
+                    visited[j] = true;
+                }
+            }
+        }
+    }
+    return count / 2;
+}
