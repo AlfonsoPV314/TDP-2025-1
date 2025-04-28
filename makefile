@@ -1,4 +1,4 @@
-all: main #testList testGraph testHeap testState testStack testRiverCrossing
+all: main testGraph #testList testGraph testHeap testState testStack testRiverCrossing
 
 ClaseEjemplo.o: ClaseEjemplo.h ClaseEjemplo.cpp
 	g++ -g -c ClaseEjemplo.cpp
@@ -30,8 +30,8 @@ Boat.o: Boat.cpp Boat.h
 main: main.cpp Graph.o Boat.o State.o Stack.o Heap.o RiverCrossing.o Vector.o ReadFile.o
 	g++ -g Graph.o Boat.o State.o Stack.o Heap.o RiverCrossing.o Vector.o ReadFile.o main.cpp -o main
 
-testGraph: Graph.o testGraph.cpp
-	g++ -g Graph.o testGraph.cpp -o testGraph
+testGraph: Vector.o Graph.o testGraph.cpp
+	g++ -g Vector.o Graph.o testGraph.cpp -o testGraph
 
 testRiverCrossing: Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp
 	g++ -g Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp -o testRiverCrossing

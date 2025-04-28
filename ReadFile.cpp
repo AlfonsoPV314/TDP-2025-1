@@ -79,6 +79,9 @@ ReadFile::ReadFile(std::string nombreArchivo) {
         cout << endl;
         cout << "en " << s->depth << " pasos" <<endl;
     }
+    else{
+        cout << "No se encontró solución." << endl;
+    }
     cout << "Tiempo de ejecución: " << duration.count() << " ms" << endl;
 
     archivo.close();

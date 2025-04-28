@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstring>
+#include "Vector.h"
 using namespace std;
 //NOTA: CAMBIAR GRAFO POR BITMASK EN EL FUTURO
 
@@ -19,4 +21,5 @@ public:
     Graph* clonePtr();
     Graph* arrSubgraph(int* arr, int size); // create subgraph from array
     int mvc2Approx(Graph* g); // calcula una aproximacion que es al menos 2 veces el valor de la minima covertura de vértices
+    Vector** separateNonAdjacent(int& numSets); // separa los vertices no adyacentes en conjuntos
 };

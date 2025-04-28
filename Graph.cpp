@@ -10,6 +10,7 @@ Graph::Graph(int v){
         for(int j = 0; j < V; j++){
             M[i][j] = 0;
         }
+        incompArr[i] = 0;
     }
 }
 
@@ -109,6 +110,7 @@ int* Graph::sortByIncomp(int* arr, int size) {
     // Ordenar usando Bubble Sort
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - i - 1; j++) {
+            cout << "[Graph::sortByIncomp] comparando " << sortedArr[j] -1 << " y " << sortedArr[j + 1] -1 << endl;
             if (incompArr[sortedArr[j] - 1] < incompArr[sortedArr[j + 1] - 1]) {
                 // Intercambiar elementos
                 int temp = sortedArr[j];
@@ -170,4 +172,58 @@ int Graph::mvc2Approx(Graph* g) {
         }
     }
     return count / 2;
+}
+
+Vector** Graph::separateNonAdjacent(int& numSets) {
+    // Array to store the color of each vertex (-1 means no color assigned yet)
+    int* color = new int[V];
+    memset(color, -1, sizeof(int) * V);
+
+    // Boolean array to mark which colors are available for a vertex
+    bool* available = new bool[V];
+
+    // Assign colors to vertices
+    for (int u = 0; u < V; ++u) {
+        // Mark all colors as available
+        memset(available, true, sizeof(bool) * V);
+
+        // Mark colors used by adjacent vertices as unavailable
+        for (int v = 0; v < this->V; ++v) {
+            if (M[u][v] == 1 && color[v] != -1) {
+                available[color[v]] = false;
+            }
+        }
+
+        // Assign the first available color to vertex u
+        for (int c = 0; c < this->V; ++c) {
+            if (available[c]) {
+                color[u] = c;
+                break;
+            }
+        }
+    }
+
+    // Find the number of colors used
+    numSets = 0;
+    for (int i = 0; i < this->V; ++i) {
+        if (color[i] + 1 > numSets) {
+            numSets = color[i] + 1;
+        }
+    }
+
+    // Group vertices by their colors
+    Vector** result = new Vector*[numSets];
+    for (int i = 0; i < numSets; ++i) {
+        result[i] = new Vector();
+    }
+
+    for (int i = 0; i < this->V; ++i) {
+        result[color[i]]->push(i);
+    }
+
+    // Clean up
+    delete[] color;
+    delete[] available;
+
+    return result;
 }
