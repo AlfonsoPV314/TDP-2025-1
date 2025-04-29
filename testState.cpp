@@ -9,23 +9,49 @@ int main() {
     g->addEdge(1, 2);
     s->printState(1);
 
+    cout << endl;
+
+    cout << "Inicializando estado..." << endl;
+    
     s->setInitialState();
     s->printState(1);
-    int* arr2 = new int[1];
-    arr2[0] = ZORRO;
-    State *s1 = s->cross(arr2, 1, g);
+
+    cout << endl;
+
+    cout << "Intentando cruzar zorro..." << endl;
+    int* arrZ = new int[1];
+    arrZ[0] = 1;
+    State *s1 = s->cross(arrZ, 1, g);
     if (s1 != nullptr) {
+        cout << "Exito cruzando zorro!" << endl;
         s1->printState(1);
     } else {
         cout << "No se puede cruzar el zorro" << endl;
     }
-    int* arr = new int[1];
-    arr[0] = CABRA;
-    State *s2 = s->cross(arr, 1, g);
+
+    cout << endl;
+
+    cout << "Intentando cruzar cabra..." << endl;
+    int* arrC = new int[1];
+    arrC[0] = 2;
+    State *s2 = s->cross(arrC, 1, g);
     if (s2 != nullptr) {
+        cout << "Exito cruzando cabra!" << endl;
         s2->printState(1);
     } else {
         cout << "No se puede cruzar la cabra" << endl;
     }
 
+    cout << endl;
+
+    cout << "Intentando cruzar repollo..." << endl;
+    int* arrR = new int[1];
+    arrR[0] = 3;
+    State *s3 = s->cross(arrR, 1, g);
+    if (s3 != nullptr) {
+        cout << "Exito cruzando repollo!" << endl;
+        s3->printState(1);
+    } else {
+        cout << "No se puede cruzar el repollo" << endl;
+    }
 }

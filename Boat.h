@@ -11,4 +11,5 @@ class Boat{
         void setFuel(int fuel);
         void updateFuelAmt();
         bool isFuelEmpty();
+        void printBoat();
 };

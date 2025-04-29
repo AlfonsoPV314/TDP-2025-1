@@ -7,9 +7,12 @@ Heap::Heap(int size) {
 }
 
 void Heap::push(State *s) {
-    cout << "top: " << top << endl;
+    if(s == nullptr) {
+        cout << "Estado nulo" << endl;
+        return;
+    }
     if (top == size) {
-        cout << "Heap lleno" << endl;
+        //cout << "Heap lleno" << endl;
         // se debe volver a generar el arreglo
         State **newheap = new State*[size*2];
         for (int i=0; i<size; i++) {
@@ -21,22 +24,18 @@ void Heap::push(State *s) {
     }
     heap[top] = s;
     top++;
-    cout << "top: " << top << " top - 1: " << top-1 << endl;
     bubbleUp(top-1);
 }
 
 void Heap::bubbleUp(int i) {
     if (i != 0) {
         int up = (i-1)/2;
-        cout << up << " " << i << endl;
-        heap[0]->printState(1);
         if (*heap[up] < *heap[i]) {
             State *tmp = heap[up];
             heap[up] = heap[i];
             heap[i] = tmp;
             bubbleUp(up);
         } 
-        cout << "glag" << endl;
     }
 }
 

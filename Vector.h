@@ -17,4 +17,5 @@ class Vector{
         bool operator<(Vector v);
         Vector clone();
         Vector* clonePtr();
+        int isInVector(int i);
 };

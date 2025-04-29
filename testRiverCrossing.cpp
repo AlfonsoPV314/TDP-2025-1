@@ -3,9 +3,33 @@
 
 
 int main() {
-    RiverCrossing r(1000);
+    int psgs = 9;
+    int capacidad = 0; // capacidad del barco
+    int boatCant = 3; // cantidad de barcos
+    Boat* boats = new Boat[boatCant];
+    boats[0].setupBoat(0, 1, 100);
+    boats[1].setupBoat(1, 2, 98);
+    boats[2].setupBoat(2, 1, 99);
+    for(int i = 0; i < boatCant; i++) {
+        capacidad += boats[i].capacidad;
+    }
+    Graph* incompMtrx = new Graph(psgs);
+    incompMtrx->addEdge(0, 2);
+    incompMtrx->addEdge(1, 3);
+    incompMtrx->addEdge(1, 5);
+    incompMtrx->addEdge(1, 6);
+    incompMtrx->addEdge(2, 4);
+    incompMtrx->addEdge(2, 7);
+    incompMtrx->addEdge(3, 4);
+    incompMtrx->addEdge(4, 5);
+    incompMtrx->addEdge(4, 6);
+    incompMtrx->addEdge(5, 7);
+    incompMtrx->addEdge(5, 8);
+    incompMtrx->addEdge(6, 7);
+    incompMtrx->addEdge(6, 8);
+    RiverCrossing r(100, psgs, boatCant, boats, incompMtrx);
     auto start = std::chrono::high_resolution_clock::now();
-    State* s = r.solve();
+    State* s = r.solve(boats);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     cout << "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" << endl;

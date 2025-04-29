@@ -43,7 +43,6 @@ State* State::clone() {
     n->operation = operation;
     n->priority = priority;
     n->depth = depth;
-    n->boats = boats;
     for (int i = 0; i < psgs; i++) {
         n->Izq[i] = Izq[i];
         n->Der[i] = Der[i];
@@ -95,6 +94,7 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
         for(int i = 0; i < capacidad; i++) {
             comb[i]++;
         }
+        // cout << "[State::cross] Combinación inválida" << endl;
         return nullptr; // Si no es válida, no se realiza el cruce
     }
 
@@ -103,11 +103,11 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
         if(comb[i] > -1) {
             int psg = comb[i];
             if (isIzq && Izq[psg]) {
-                cout << "[State::cross] Cruzando: " << psg << " a orilla derecha " << endl;
+                // cout << "[State::cross] Cruzando: " << psg << " a orilla derecha " << endl;
                 n->Izq[psg] = false;
                 n->Der[psg] = true;
             } else if (!isIzq && Der[psg]) {
-                cout << "[State::cross] Cruzando: " << psg << " a orilla izquierda" << endl;
+                // cout << "[State::cross] Cruzando: " << psg << " a orilla izquierda" << endl;
                 n->Der[psg] = false;
                 n->Izq[psg] = true;
             }
@@ -125,7 +125,6 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     }
     n->operation += "}";
     n->parent = this;
-    cout << endl;
 
     return n;
 }

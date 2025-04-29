@@ -1,4 +1,4 @@
-all: main testGraph #testList testGraph testHeap testState testStack testRiverCrossing
+all: main testGraph testHeap testRiverCrossing testState testStack
 
 ClaseEjemplo.o: ClaseEjemplo.h ClaseEjemplo.cpp
 	g++ -g -c ClaseEjemplo.cpp
@@ -33,17 +33,17 @@ main: main.cpp Graph.o Boat.o State.o Stack.o Heap.o RiverCrossing.o Vector.o Re
 testGraph: Vector.o Graph.o testGraph.cpp
 	g++ -g Vector.o Graph.o testGraph.cpp -o testGraph
 
-testRiverCrossing: Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp
-	g++ -g Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp -o testRiverCrossing
+testRiverCrossing: Vector.o Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp
+	g++ -g Vector.o Boat.o Graph.o State.o Stack.o Heap.o RiverCrossing.o testRiverCrossing.cpp -o testRiverCrossing
 
-testStack: Boat.o Graph.o State.o Stack.o testStack.cpp
-	g++ -g Boat.o Graph.o State.o Stack.o testStack.cpp -o testStack
+testStack: Vector.o Boat.o Graph.o State.o Stack.o testStack.cpp
+	g++ -g Vector.o Boat.o Graph.o State.o Stack.o testStack.cpp -o testStack
 
-testState: Boat.o Graph.o State.o testState.cpp
-	g++ -g Boat.o Graph.o State.o testState.cpp -o testState
+testState: Vector.o Boat.o Graph.o State.o testState.cpp
+	g++ -g Vector.o Boat.o Graph.o State.o testState.cpp -o testState
 
-testHeap: Boat.o Graph.o State.o Heap.o testHeap.cpp
-	g++ -g Boat.o Graph.o State.o Heap.o testHeap.cpp -o testHeap
+testHeap: Vector.o Boat.o Graph.o State.o Heap.o testHeap.cpp
+	g++ -g Vector.o Boat.o Graph.o State.o Heap.o testHeap.cpp -o testHeap
 
 clean:
-	rm -rf *.o main testList testGraph testHeap testState testStack testRiverCrossing testGraph testList
+	rm -rf *.o main testGraph testHeap testState testStack testRiverCrossing testGraph

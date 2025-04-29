@@ -1,7 +1,7 @@
 #include "RiverCrossing.h"
 
 // RiverCrossing::RiverCrossing(int size) {
-// //    open = new Stack(size); // se cambio a heap
+//     open = new Stack(size); // se cambio a heap
 //     psgs = 9;
 //     capacidad = 0; // capacidad del barco
 //     incompMtrx = new Graph(9);
@@ -56,39 +56,120 @@ State* RiverCrossing::solve(Boat* boats) {
     init->printState(boatCant);
     open->push(init);
     all->push(init);
+    int numSets = 0;
+    Vector** compSets = incompMtrx->separateNonAdjacent(numSets);
 
-    return cross();
+    std::cout << "Conjuntos no adyacentes:" << std::endl;
 
-}
-
-State* RiverCrossing::cross() {
-    if(open->top == 0) {
-        cout << "[RiverCrossing::cross] No hay estados por visitar." << endl;
-        return nullptr; // caso no hay estados por visitar
+    for (int i = 0; i < numSets; ++i) {
+        std::cout << "[";
+        for (int j = 0; j < compSets[i]->capacity; ++j) {
+            std::cout << compSets[i]->getPos(j);
+            if (j < compSets[i]->capacity - 1) std::cout << ", ";
+        }
+        std::cout << "]\n";
     }
-    // paso 3: sacar el estado con mayor prioridad
-    State *current = open->pop();
-    current->printState(boatCant);
-    if (current->isFinalState()) {
-        cout << "[RiverCrossing::cross] Se encontró solución." << endl;
-        return current; // caso nuestra búsqueda llegó a solución
-    }
-
-    cout << "[RiverCrossing::cross] Sacando estado de la pila..." << endl;
-
-    int combSize = 0;
-    int* aux = current->getPassengers(current->psgs, combSize);
-    int* sidePsgs = incompMtrx->sortByIncomp(aux, combSize);
-
-    // paso 6: cruzar barco vacío
-    State *ns = current->crossVoid(sidePsgs, incompMtrx);
-    addState(ns, combSize);
     
-    // paso 4: generar combinaciones de pasajeros
-    return combinaciones(current, sidePsgs, current->capacidadActual, combSize);
+
+    // paso 2: mientras open no este vacio
+    while (open->top != 0) { // recordar que top es el lugar vacío en el arreglo
+        State *s = open->pop();
+        cout << "[RiverCrossing::solve] NUEVA ITERACION! :D. Camino actual: " << endl;
+        s->printPath();
+        cout << endl;
+
+        // paso 3: preguntamos si es la solucion
+        if (s->isFinalState()) {
+            cout << "[RiverCrossing::solve] Solución encontrada!" << endl;
+            return s;
+        }
+
+        int combSize = 0;
+
+        int* sidePsgs = s->getPassengers(psgs, combSize);
+
+        State* ns = s->crossVoid(sidePsgs, incompMtrx); // Intentar cruzar vacío
+        addState(ns, combSize); // Agregar el nuevo estado al heap y stack
+
+        if(s->capacidadActual > 0){
+
+            int* sidePsgsAux = new int[combSize];
+
+            for(int i = 0; i < combSize; i++){
+                sidePsgsAux[i] = sidePsgs[i];
+            }
+
+            for(int i = 0; i < numSets; i++){
+                // cout << "[RiverCrossing::solve] Para el set " << i << "!" << endl;
+                int* arrSetInSide = new int[compSets[i]->current];
+                int indx = 0, cantSetInSide = 0, cantSideNotInSet = combSize;
+                for(int j = 0; j < combSize; j++){
+                    int aux = compSets[i]->isInVector(sidePsgsAux[j] - 1);
+                    //cout << "[RiverCrossing::solve] sidepsgsaux[j] - 1 = " << sidePsgsAux[j] - 1 << endl;
+                    if(sidePsgsAux[j] - 1 > -1 && aux > -1){
+                        sidePsgsAux[j] = -1;
+                        cantSetInSide++;
+                        cantSideNotInSet--;
+                        //cout << cantSideNotInSet << endl;
+                        arrSetInSide[indx] = compSets[i]->data[aux] + 1;
+                        indx++;
+                        
+                    }
+                }
+
+                // cout << "[RiverCrossing::solve] Pasajeros del set que estan en la orilla: ";
+                // for(int j = 0; j < indx; j++){
+                //     cout << arrSetInSide[j];
+                // }
+                // cout << endl << "[RiverCrossing::solve] Pasajeros que estan en la orilla y no en el set: " << cantSideNotInSet << endl;
+
+                //cin.get();
+
+                if(cantSideNotInSet <= 0 || (cantSetInSide <= s->capacidadActual && cantSetInSide > 0)){
+                    if(!cantSideNotInSet <= 0){
+                        // cout << "[RiverCrossing::solve] Hay mas de 1 set de compatibilidad en la orilla" << endl;
+                        State* ns = s->cross(arrSetInSide, cantSetInSide, incompMtrx);
+                        addState(ns, cantSetInSide);
+                    }
+                    else{
+                        // cout << "[RiverCrossing::solve] Todos los pasajeros en esta orilla son compatibles entre si" << endl;
+                        combinaciones(s, arrSetInSide, s->capacidadActual, combSize);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // cout << "[RiverCrossing::solve] Heap: " << endl;
+        //open->printHeap();
+        //cout << endl;
+
+        // Liberar memoria de las combinaciones (problemas en combs[2])
+        // for (int i = 0; i < combSize; i++) {
+        //     if (combs[i] == nullptr || sizeof(combs[i]) == 0) {
+        //         cout << "Error: combs[" << i << "] es nullptr, no se libera." << endl;
+        //     } else {
+        //         cout << "Liberando combs[" << i << "]." << endl;
+        //         // Imprimir la combinación antes de liberar
+        //         cout << "Combinación: {";
+        //         for (int j = 0; combs[i][j] != -1; j++) {
+        //             cout << combs[i][j] << (combs[i][j + 1] != 0 ? ", " : "");
+        //         }
+        //         cout << "}" << endl;
+        //         delete[] combs[i];
+        //         combs[i] = nullptr; // Prevenir doble liberación
+        //     }
+        // }
+        
+        
+
+    }
+
+    cout << "[RiverCrossing::solve] No se encontró solución." << endl;
+    return nullptr; // caso nuestra búsqueda no llegó a solución
 }
 
-State* RiverCrossing::combinaciones(State* s, int* arr, int size, int& combSize) {
+void RiverCrossing::combinaciones(State* s, int* arr, int size, int& combSize) {
     cout << "[RiverCrossing::combinaciones] INPUT: " << endl;
     cout << "arr: ";
     for (int i = 0; i < combSize; i++) {
@@ -112,24 +193,21 @@ State* RiverCrossing::combinaciones(State* s, int* arr, int size, int& combSize)
     // Determinar la cantidad máxima de combinaciones posibles
     int maxCombinations = (1 << n) - 1; // 2^n - 1 combinaciones
     combSize = 0;
-    int minSize = 1;
-    if(n >= 10) {
-        Graph* subGraph = incompMtrx;
-        if(s->parent != nullptr){
-            subGraph = incompMtrx->arrSubgraph(arrReal, n);
-        }
-        minSize = subGraph->mvc2Approx(subGraph);
-    }
+    int minSize = s->capacidadActual;
+    // if(n >= 10) {
+    //     Graph* subGraph = incompMtrx;
+    //     if(s->parent != nullptr){
+    //         subGraph = incompMtrx->arrSubgraph(arrReal, n);
+    //     }
+    //     minSize = subGraph->mvc2Approx(subGraph);
+    // }
     
     // cout << "[RiverCrossing::combinaciones] minSize: " << minSize << endl;
 
     // Generar combinaciones desde el tamaño más grande hacia el más pequeño
     for (int r = size; r >= minSize; r--) {
         int* data = new int[r]; // Espacio temporal para una combinación
-        State* verify = combinacion(s, arrReal, data, 0, n - 1, 0, r, combSize);
-        if(verify != nullptr){
-            return verify;
-        }
+        combinacion(s, arrReal, data, 0, n - 1, 0, r, combSize);
         delete[] data; // Liberar memoria del temporal
     }
 
@@ -139,10 +217,9 @@ State* RiverCrossing::combinaciones(State* s, int* arr, int size, int& combSize)
     // combSize++;
 
     delete[] arrReal; // Liberar memoria de `arrReal`
-    return nullptr;
 }
 
-State* RiverCrossing::combinacion(State* s, int* arr, int* data, int start, int end, int index, int r, int& combIndex) {
+void RiverCrossing::combinacion(State* s, int* arr, int* data, int start, int end, int index, int r, int& combIndex) {
     // Caso base: combinación completa
     if (index == r) {
         cout << "[RiverCrossing::combinacion] Verificando si cruzar con {";
@@ -154,20 +231,15 @@ State* RiverCrossing::combinacion(State* s, int* arr, int* data, int start, int 
         State *ns = s->cross(data, r, incompMtrx); // Intentar cruzar con esta combinación
         addState(ns, end + 1); // Agregar el nuevo estado al heap y stack
         combIndex++;
-        return cross();
+        return;
     }
 
     // Generar combinaciones recursivamente
     for (int i = start; i <= end && end - i + 1 >= r - index; i++) {
         data[index] = arr[i];
-        State* verify = combinacion(s, arr, data, i + 1, end, index + 1, r, combIndex);
-        if(verify != nullptr) {
-            return verify; // Retornar el estado encontrado
-        }
+        combinacion(s, arr, data, i + 1, end, index + 1, r, combIndex);
     }
-    return nullptr; // Retornar nulo si no se encontró un estado válido
 }
-
 
 void RiverCrossing::addState(State* ns, int combSize) {
     if (ns != nullptr) {
@@ -210,4 +282,7 @@ void RiverCrossing::priorityCalc(State* s, int combSize) {
             s->priority++;
         }
     }
+    //cout << "[RiverCrossing::priorityCalc] Priority: " << s->priority << endl;
+    //cout << "[RiverCrossing::priorityCalc] Depth: " << s->depth << endl;
+
 }

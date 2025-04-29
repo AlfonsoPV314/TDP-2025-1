@@ -110,3 +110,13 @@ Vector* Vector::clonePtr() {
     }
     return v;
 }
+
+int Vector::isInVector(int i){
+    if(i < 0){
+        return -1;
+    }
+    for(int j = 0; j < current; j++){
+        if(data[j] == i) return j;
+    }
+    return -1;
+}
