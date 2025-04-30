@@ -2,24 +2,45 @@
 #include <cstring>
 #include "Vector.h"
 using namespace std;
-//NOTA: CAMBIAR GRAFO POR BITMASK EN EL FUTURO
 
 class Graph{
 public:
-    int** M;    // adjacency matrix
-    int V;   // number of vertices
-    int E;  // number of edges
-    int* incompArr; // array of incompatibilities
+    int** M;    // grafo de incompatibilidades representado por su matriz de adyacencia
+    int V;   // numero de vertices
+    int E;  // numero de aristas
+
+    // Entradas: cantidad de vertices (int)
+    // Salidas: nuevo grafo (Graph)
+    // Descripcion: Constructor de un grafo
     Graph(int v);
-    // Graph(int v, bool i[]);   // create a graph from island array
+
+    // Entradas: nada
+    // Salidas: destruccion de un grafo
+    // Descripcion: Destructor de un grafo
     ~Graph();
-    void addEdge(int u, int v);   // add edge to graph
-    int* sortByIncomp(int* arr, int size); // sort array by incompatibilities
-    bool isEmpty();   // check if graph is empty
-    void printGraph();   // print graph
-    bool isValid(int* comb, bool* psgs, int capacidad); // check if combination is valid
-    Graph* clonePtr();
-    Graph* arrSubgraph(int* arr, int size); // create subgraph from array
-    int mvc2Approx(Graph* g); // calcula una aproximacion que es al menos 2 veces el valor de la minima covertura de vértices
-    Vector** separateNonAdjacent(int& numSets); // separa los vertices no adyacentes en conjuntos
+
+    // Entradas: vertice u (int), vertice v (int)
+    // Salidas: void
+    // Descripcion: Funcion que crea una arista entre 2 vertices
+    void addEdge(int u, int v);  
+
+    // Entradas: nada
+    // Salidas: si el grafo posee aristas o no (bool)
+    // Descripcion: Funcion que verifica si hay aristas en el grafo
+    bool isEmpty();  
+
+    // Entradas: nada
+    // Salidas: void
+    // Descripcion: Funcion que imprime por pantalla un grafo
+    void printGraph();  
+
+    // Entradas: arreglo de los pasajeros a cruzar (int*), arreglo de la orilla actual (bool*), capacidad de los botes (int)
+    // Salidas: si se puede o no realizar el cruce (bool)
+    // Descripcion: Funcion que valida un cruce de pasajeros
+    bool isValid(int* comb, bool* psgs, int capacidad); 
+
+    // Entradas: numero de sets que se van a crear (int&)
+    // Salidas: Arreglo de vectores con los sets de compatibilidad (Vector**)
+    // Descripcion: Funcion que crea los arreglos de los pasajeros compatibles entre si
+    Vector** separateNonAdjacent(int& numSets); 
 };

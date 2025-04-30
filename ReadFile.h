@@ -10,7 +10,9 @@
 
 
 class ReadFile{
-    public:        
+    public:  
+        // Entradas: nombre del archivo (std::string)
+        // Salidas: ReadFile nuevo (ReadFile)
+        // Descripcion: Constructor de un ReadFile. Lee un archivo de acuerdo a las especificaciones del enunciado.      
         ReadFile(std::string nombreArchivo);
-        ~ReadFile();
 };

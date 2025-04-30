@@ -1,10 +1,17 @@
 #include "State.h"
 
-State::State(int psgs, Boat* boats, int capacidad) {
+// Entradas: numero de psajeros (int), arreglo de botes (Boat*), cantidad de botes (int), capacidad actual de los botes (int)
+// Salidas: Estado nuevo (State)
+// Descripcion: Constructor de un estado.
+State::State(int psgs, Boat* boats, int cantBotes, int capacidad) {
     isIzq=false;
     priority=-1;
     parent=nullptr;
-    this->boats = boats;
+    this->cantBotes = cantBotes;
+    this->boats = new Boat[cantBotes];
+    for(int i = 0; i < cantBotes; i++){
+        this->boats[i] = *boats[i].cloneBoat();
+    }
     this->psgs = psgs;
     Izq = new bool[psgs];
     Der = new bool[psgs];
@@ -18,6 +25,9 @@ State::State(int psgs, Boat* boats, int capacidad) {
     depth = 0;
 }
 
+// Entradas: nada
+// Salidas: void
+// Descripcion: Inicializa el estado y sus atributos asumiendo que es el estado inicial.
 void State::setInitialState() {
     isIzq=true;
     parent=nullptr;
@@ -36,20 +46,9 @@ void State::setInitialState() {
     // }
 }
 
-State* State::clone() {
-    State *n = new State(psgs, boats, capacidadActual);
-    n->isIzq = isIzq;
-    n->parent = parent;
-    n->operation = operation;
-    n->priority = priority;
-    n->depth = depth;
-    for (int i = 0; i < psgs; i++) {
-        n->Izq[i] = Izq[i];
-        n->Der[i] = Der[i];
-    }
-    return n;    
-}
-
+// Entradas: tamaño del arreglo inicial (int), tamaño del arreglo con la cantidad de pasajeros (int&)
+// Salidas: retorna un arreglo con los pasajeros en la orilla activa (int*)
+// Descripcion: obtiene los pasajeros presentes en la orilla en la cual se está actualmente
 int* State::getPassengers(int size, int& count) {
     // cout << "[State::getPassengers] INPUT: size = " << size << " count = " << count << endl;
     // Crear un arreglo dinámico para almacenar los índices
@@ -78,7 +77,9 @@ int* State::getPassengers(int size, int& count) {
     return finalResult;
 }
 
-
+// Entradas: pasajeros a cruzar (int*), cantidad de pasajeros que cruzan (int), grafo de incompatibilidades
+// Salidas: estado con los pasajeros a cruzar en la otra orilla (State*)
+// Descripcion: Realiza un cruce de pasajeros en un estado, verificando su validez
 State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     State* n = clone();
     n->depth++;
@@ -129,7 +130,9 @@ State* State::cross(int* comb, int capacidad, Graph* incompMtrx) {
     return n;
 }
 
-
+// Entradas: pasajeros a cruzar (int*) (auxiliar), grafico de incompatibilidades (Graph*)
+// Salidas: estado con los botes en la otra orilla (State*)
+// Descripcion: Realiza un cruce sin ningun pasajero en un estado, verificando su validez
 State* State::crossVoid(int* comb, Graph* incompMtrx) {
     State *n = clone();
     n->operation = "crossVoid";
@@ -151,6 +154,9 @@ State* State::crossVoid(int* comb, Graph* incompMtrx) {
     return nullptr; 
 }
 
+// Entradas: nada
+// Salidas: si es el estado final o no (bool)
+// Descripcion: verifica si el estado es el estado final
 bool State::isFinalState() {
     for(int i = 0; i < psgs; i++){
         if(Izq[i]){
@@ -160,8 +166,28 @@ bool State::isFinalState() {
     return true;
 }    
 
-void State::printState(int boatCant) {
-    cout << "[State::printState]" << operation << endl;
+// Entradas: nada
+// Salidas: estado clonado (State*)
+// Descripcion: Clona el estado
+State* State::clone() {
+    State *n = new State(psgs, boats, cantBotes, capacidadActual);
+    n->isIzq = isIzq;
+    n->parent = parent;
+    n->operation = operation;
+    n->priority = priority;
+    n->depth = depth;
+    for (int i = 0; i < psgs; i++) {
+        n->Izq[i] = Izq[i];
+        n->Der[i] = Der[i];
+    }
+    return n;    
+}
+
+// Entradas: nada
+// Salidas: void
+// Descripcion: Imprime el estado por pantalla
+void State::printState() {
+    cout << "[State::printState] " << operation << endl;
     cout << "=======================" << endl;
     cout << "Barco en la orilla: " << (isIzq ? "Izquierda" : "Derecha") << endl;
     cout << "Orilla Izquierda: ";
@@ -182,13 +208,31 @@ void State::printState(int boatCant) {
 
     cout << "Capacidad actual: " << capacidadActual << endl;
     cout << "Profundidad: " << depth << endl;
+    cout << "Prioridad: " << priority << endl;
     cout << "Barcos: " << endl;
-    for (int i = 0; i < boatCant; i++) {
+    for (int i = 0; i < cantBotes; i++) {
         cout << "Barco " << boats[i].id << " (capacidad: " << boats[i].capacidad << ", combustible: " << boats[i].fuelAmt << ") " << endl;
     }
     cout << "=======================" << endl;
 }
 
+// Entradas: nada
+// Salidas: void
+// Descripcion: Imprime por pantalla el camino de los estados
+void State::printPath() {
+    if(parent==nullptr) { // caso base
+        cout << "[State::printPath] " << operation << " -> "; // va a sobrar una flecha en el ultimo
+        return;
+    }
+    if (parent!=nullptr) { // recorrido hacia la raiz
+        parent->printPath();
+    }
+    cout << operation << " -> "; // va a sobrar una flecha en el ultimo
+}
+
+// Entradas: estado a verificar (State)
+// Salidas: si son iguales o no (bool)
+// Descripcion: Verifica si 2 estados son iguales
 bool State::operator==(State s) {
     // No se va a controlar la variable parent y operation
     if (isIzq != s.isIzq) {
@@ -207,17 +251,9 @@ bool State::operator==(State s) {
     return true;
 }
 
+// Entradas: estado a verificar (State)
+// Salidas: si el estado es menor a aquel que se compara o no (bool)
+// Descripcion: Verifica si el estado es menor que un estado a comparar
 bool State::operator<(State s) {
     return priority < s.priority;
-}
-
-void State::printPath() {
-    if(parent==nullptr) { // caso base
-        cout << "[State::printPath]" << operation << " -> "; // va a sobrar una flecha en el ultimo
-        return;
-    }
-    if (parent!=nullptr) { // recorrido hacia la raiz
-        parent->printPath();
-    }
-    cout << operation << " -> "; // va a sobrar una flecha en el ultimo
 }

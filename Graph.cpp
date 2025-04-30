@@ -1,27 +1,33 @@
 #include "Graph.h"
 
+// Entradas: cantidad de vertices (int)
+// Salidas: nuevo grafo (Graph)
+// Descripcion: Constructor de un grafo
 Graph::Graph(int v){
     this->V = v;
     E = 0;
     M = new int*[V];
-    incompArr = new int[V];
     for(int i = 0; i < V; i++){
         M[i] = new int[V];
         for(int j = 0; j < V; j++){
             M[i][j] = 0;
         }
-        incompArr[i] = 0;
     }
 }
 
+// Entradas: nada
+// Salidas: destruccion de un grafo
+// Descripcion: Destructor de un grafo
 Graph::~Graph(){
     for(int i = 0; i < V; i++){
         delete[] M[i];
     }
     delete[] M;
-    delete[] incompArr;
 }
 
+// Entradas: vertice u (int), vertice v (int)
+// Salidas: void
+// Descripcion: Funcion que crea una arista entre 2 vertices
 void Graph::addEdge(int u, int v){
     if(u < 0 || u >= this->V || v < 0 || v >= this->V){
         return;
@@ -31,15 +37,19 @@ void Graph::addEdge(int u, int v){
     }
     M[u][v] = 1;
     M[v][u] = 1;
-    incompArr[u]++;
-    incompArr[v]++;
     E++;
 }
 
+// Entradas: nada
+// Salidas: si el grafo posee aristas o no (bool)
+// Descripcion: Funcion que verifica si hay aristas en el grafo
 bool Graph::isEmpty(){
     return E == 0;
 }
 
+// Entradas: nada
+// Salidas: void
+// Descripcion: Funcion que imprime por pantalla un grafo
 void Graph::printGraph(){
     cout << "[Graph::printGraph] Imprimiendo la matriz de adyacencia" << endl;
     for(int i = 0; i < V; i++){
@@ -51,6 +61,9 @@ void Graph::printGraph(){
     }
 }
 
+// Entradas: arreglo de los pasajeros a cruzar (int*), arreglo de la orilla actual (bool*), capacidad de los botes (int)
+// Salidas: si se puede o no realizar el cruce (bool)
+// Descripcion: Funcion que valida un cruce de pasajeros
 bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     // Marcar los pasajeros de la combinación como ausentes temporalmente
     // cout << "[Graph::isValid] capacidad: " << capacidad << endl;
@@ -63,13 +76,6 @@ bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     }
     // cout << "}" << endl;
 
-
-    // cout << "[Graph::isValid] Verificando combinación: {";
-    // for (int i = 0; comb[i] != -1; i++) {
-    //     cout << comb[i] << (comb[i + 1] != 0 ? ", " : "");
-    // }
-    // cout << "}" << endl;
-
     // Validar si hay conflictos entre los pasajeros restantes
     for (int i = 0; i < V; i++) {
         for (int j = 0; j < V; j++) {
@@ -80,7 +86,7 @@ bool Graph::isValid(int* comb, bool* arr, int capacidad) {
                         arr[comb[k]] = true;
                     }
                 }
-                cout << "[Graph::isValid] Combinación inválida por conflicto entre " << i << " y " << j << endl;
+                // cout << "[Graph::isValid] Combinación inválida por conflicto entre " << i << " y " << j << endl;
                 return false;
             }
         }
@@ -97,83 +103,9 @@ bool Graph::isValid(int* comb, bool* arr, int capacidad) {
     return true;
 }
 
-
-
-
-int* Graph::sortByIncomp(int* arr, int size) {
-    // Crear un nuevo arreglo dinámico para los elementos ordenados
-    int* sortedArr = new int[size];
-    for (int i = 0; i < size; i++) {
-        sortedArr[i] = arr[i];
-    }
-    
-    // Ordenar usando Bubble Sort
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - i - 1; j++) {
-            cout << "[Graph::sortByIncomp] comparando " << sortedArr[j] -1 << " y " << sortedArr[j + 1] -1 << endl;
-            if (incompArr[sortedArr[j] - 1] < incompArr[sortedArr[j + 1] - 1]) {
-                // Intercambiar elementos
-                int temp = sortedArr[j];
-                sortedArr[j] = sortedArr[j + 1];
-                sortedArr[j + 1] = temp;
-            }
-        }
-    }
-
-    return sortedArr;
-}
-
-Graph* Graph::clonePtr(){
-    Graph* g = new Graph(V);
-    for(int i = 0; i < V; i++){
-        for(int j = 0; j < V; j++){
-            g->M[i][j] = M[i][j];
-        }
-        g->incompArr[i] = incompArr[i];
-    }
-    return g;
-}
-
-Graph* Graph::arrSubgraph(int* arr, int size) {
-    Graph* g = new Graph(size);
-    // cout << "[Graph::arrSubgraph] size: " << size << endl;
-    // cout << "[Graph::arrSubgraph] arr: ";
-    // for (int i = 0; i < size; i++) {
-    //     cout << arr[i] << " ";
-    // }
-    cout << endl;
-    for (int i = 0; i < size; i++) {
-        // cout << "[Graph::arrSubgraph] i: " << i << " arr[i]: " << arr[i] << endl;
-        for (int j = 0; j < size; j++) {
-            // cout << "[Graph::arrSubgraph] j: " << j << " arr[j]: " << arr[j] << endl;
-            g->M[i][j] = M[arr[i] - 1][arr[j] - 1];
-        }
-        g->incompArr[i] = incompArr[arr[i] - 1];
-    }
-    return g;
-}
-
-
-int Graph::mvc2Approx(Graph* g) {
-    bool visited[g->V];
-    for(int i = 0; i < g->V; i++){
-        visited[i] = false;
-    }
-    int count = 0;
-    for(int i = 0; i < g->V; i++){
-        if(!visited[i]){
-            count++;
-            visited[i] = true;
-            for(int j = 0; j < g->V; j++){
-                if(g->M[i][j] == 1 && !visited[j]){
-                    visited[j] = true;
-                }
-            }
-        }
-    }
-    return count / 2;
-}
-
+// Entradas: numero de sets que se van a crear (int&)
+// Salidas: Arreglo de vectores con los sets de compatibilidad (Vector**)
+// Descripcion: Funcion que crea los arreglos de los pasajeros compatibles entre si
 Vector** Graph::separateNonAdjacent(int& numSets) {
     // Array to store the color of each vertex (-1 means no color assigned yet)
     int* color = new int[V];

@@ -11,9 +11,9 @@ int main() {
 
     cout << endl << "Creando estado inicial..." << endl;
 
-    State *s = new State(3, b, 0);
+    State *s = new State(3, b, 1, 0);
     s->setInitialState();
-    s->printState(1);
+    s->printState();
 
     cout << endl << "Creando grafo..." << endl;
 
@@ -22,7 +22,7 @@ int main() {
     g->addEdge(1, 2);
     g->printGraph();
 
-    cout << "Agregando estado inicial al heap..." << endl;
+    cout << endl << "Agregando estado inicial al heap..." << endl;
     h->push(s);
     h->printHeap();
 
@@ -30,7 +30,7 @@ int main() {
     int* arr0 = new int[1];
     arr0[0] = 2;
     State *s1 = s->cross(arr0, 1, g);
-    s1->printState(1);
+    s1->printState();
 
     cout << endl << "Agregando estado cruzando cabra al heap..." << endl;
     h->push(s1);
@@ -39,7 +39,7 @@ int main() {
     cout << endl << "Intentando cruzar vacío..." << endl;
     int arr1[2] = {0, 0};
     State *s2 = s1->crossVoid(arr1, g);
-    s2->printState(1);
+    s2->printState();
 
     cout << endl << "Agregando estado cruzando vacío al heap..." << endl;
     h->push(s2);
@@ -50,7 +50,7 @@ int main() {
     arr2[0] = 0;
     State *s3 = s2->cross(arr2, 1, g);
     if(s3 != nullptr){
-        s3->printState(1);
+        s3->printState();
     }
     else{
         cout << "No se puede cruzar vacío de nuevo" << endl;
@@ -65,7 +65,7 @@ int main() {
     arr3[0] = 1;
     State *s4 = s3->cross(arr3, 1, g);
     if(s4 != nullptr){
-        s4->printState(1);
+        s4->printState();
     }
     else{
         cout << "No se puede cruzar zorro" << endl;
@@ -75,5 +75,5 @@ int main() {
     h->push(s4);
 
     h->printHeap();
-    cout << "NOTA: La prioridad se calcula en la clase RiverCrossing" << endl;
+    cout << endl << "NOTA: La prioridad se calcula en la clase RiverCrossing" << endl;
 }

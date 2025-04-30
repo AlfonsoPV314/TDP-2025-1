@@ -1,4 +1,4 @@
-all: main testGraph testHeap testRiverCrossing testState testStack
+all: main testGraph testHeap testRiverCrossing testState testStack testVector
 
 ClaseEjemplo.o: ClaseEjemplo.h ClaseEjemplo.cpp
 	g++ -g -c ClaseEjemplo.cpp
@@ -45,5 +45,8 @@ testState: Vector.o Boat.o Graph.o State.o testState.cpp
 testHeap: Vector.o Boat.o Graph.o State.o Heap.o testHeap.cpp
 	g++ -g Vector.o Boat.o Graph.o State.o Heap.o testHeap.cpp -o testHeap
 
+testVector: Vector.o testVector.cpp
+	g++ -g Vector.o testVector.cpp -o testVector
+
 clean:
-	rm -rf *.o main testGraph testHeap testState testStack testRiverCrossing testGraph
+	rm -rf *.o main testGraph testHeap testState testStack testRiverCrossing testGraph testVector

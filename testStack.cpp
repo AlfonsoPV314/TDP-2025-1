@@ -8,9 +8,9 @@ int main() {
 
     cout << "Estado st: Creando estado inicial..." << endl;
 
-    State *st = new State(3, b, 0);
+    State *st = new State(3, b, 1, 0);
     st->setInitialState();
-    st->printState(1);
+    st->printState();
 
     cout << endl;
 
@@ -28,14 +28,14 @@ int main() {
     int* arr = new int[1];
     arr[0] = 2;
     State *st1 = st->cross(arr, 1, g);
-    st1->printState(1);
+    st1->printState();
 
     cout << endl;
 
     cout << "Estado st2: Intentando cruzar vacío..." << endl;
     int arr2[2] = {-1, 0};
     State *st2 = st1->crossVoid(arr2, g);
-    st2->printState(1);
+    st2->printState();
     cout << endl;
 
     cout << "push estados st, st1, st2" << endl;
@@ -46,7 +46,7 @@ int main() {
     cout << "busco st1 en la pila" << endl;
     if (s->find(st1)) {
         cout << "Estado encontrado en la pila" << endl;
-        st1->printState(1);
+        st1->printState();
     } else {
         cout << "Estado no encontrado en la pila" << endl;
     }

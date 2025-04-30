@@ -3,18 +3,18 @@
 int main() {
     Boat* b = new Boat[1];
     b[0].setupBoat(0, 1, 100);
-    State *s = new State(3, b, 0); 
+    State *s = new State(3, b, 1, 0); 
     Graph *g = new Graph(3);
     g->addEdge(0, 1);
     g->addEdge(1, 2);
-    s->printState(1);
+    s->printState();
 
     cout << endl;
 
     cout << "Inicializando estado..." << endl;
     
     s->setInitialState();
-    s->printState(1);
+    s->printState();
 
     cout << endl;
 
@@ -24,7 +24,7 @@ int main() {
     State *s1 = s->cross(arrZ, 1, g);
     if (s1 != nullptr) {
         cout << "Exito cruzando zorro!" << endl;
-        s1->printState(1);
+        s1->printState();
     } else {
         cout << "No se puede cruzar el zorro" << endl;
     }
@@ -37,7 +37,7 @@ int main() {
     State *s2 = s->cross(arrC, 1, g);
     if (s2 != nullptr) {
         cout << "Exito cruzando cabra!" << endl;
-        s2->printState(1);
+        s2->printState();
     } else {
         cout << "No se puede cruzar la cabra" << endl;
     }
@@ -50,7 +50,7 @@ int main() {
     State *s3 = s->cross(arrR, 1, g);
     if (s3 != nullptr) {
         cout << "Exito cruzando repollo!" << endl;
-        s3->printState(1);
+        s3->printState();
     } else {
         cout << "No se puede cruzar el repollo" << endl;
     }
